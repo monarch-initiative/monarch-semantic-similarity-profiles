@@ -1,0 +1,43 @@
+directories:
+   profiles: profiles
+
+
+mappings:
+   - id: hp
+   - id: mp
+ontologies:
+   - id: upheno2-lattice
+     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+   - id: upheno1-equivalent
+     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+   - id: upheno1
+     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+   - id: hp
+     mirror_from: http://purl.obolibrary.org/obo/hp.owl
+   - id: mp
+     mirror_from: http://purl.obolibrary.org/obo/mp.owl
+semantic_similarity_profiles:
+   - subset: all
+     method: semsimian
+     ontology: upheno2-lattice
+     branches:
+        subject: UPHENO:0001001
+        object: UPHENO:0001001
+   - subset: hp-mp
+     method: semsimian
+     ontology: upheno2-lattice
+     branches:
+        subject: UPHENO:0001001
+        object: UPHENO:0001001
+     prefixes:
+        subject: HP
+        object: MP
+   - subset: hp-mp
+     method: cosine
+     ontology: upheno2-lattice
+     branches:
+        subject: UPHENO:0001001
+        object: UPHENO:0001001
+     prefixes:
+        subject: HP
+        object: MP
