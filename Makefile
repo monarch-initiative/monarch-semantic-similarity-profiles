@@ -1,15 +1,12 @@
-MAKEFLAGS 				+= 	--warn-undefined-variables
-SHELL 					:= 	bash
-.DEFAULT_GOAL			:= 	help
+MAKEFLAGS 				+=	--warn-undefined-variables
+SHELL 					:=	bash
+.DEFAULT_GOAL			:=	help
 URIBASE					:=	http://purl.obolibrary.org/obo
 TMP_DATA				:=	data/tmp
-MIRRORDIR				:= 	data/mirror
-ONTOLOGYDIR             :=	data/ontology
-MIR						:= 	true
+MIRRORDIR				:=	data/mirror
+ONTOLOGYDIR				:=	data/ontology
+MIR						:=	true
 ROBOT					:=  robot
-
-
-
 
 $(MIRRORDIR)/%.owl: mirror-%
 	if [ $(MIR) = true ] && [ -f $(TMP_DATA)/mirror-$*.owl ]; then mkdir -p $(MIRRORDIR) && if cmp -s $(TMP_DATA)/mirror-$*.owl $@ ; then echo "Mirror identical, ignoring."; else echo "Mirrors different, updating." &&\
@@ -41,8 +38,6 @@ $(ONTOLOGYDIR)/upheno2-lattice.db:
 	semsql make $@
 
 
-
-
 #4
 generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice_flat.owl
 
@@ -70,8 +65,6 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent.db
 
 $(ONTOLOGYDIR)/upheno1-equivalent.db:
 	semsql make $@
-
-
 
 
 #4
@@ -103,8 +96,6 @@ $(ONTOLOGYDIR)/upheno1.db:
 	semsql make $@
 
 
-
-
 #4
 generate-ontologies: $(ONTOLOGYDIR)/upheno1_flat.owl
 
@@ -134,8 +125,6 @@ $(ONTOLOGYDIR)/hp.db:
 	semsql make $@
 
 
-
-
 #4
 generate-ontologies: $(ONTOLOGYDIR)/hp_flat.owl
 
@@ -163,8 +152,6 @@ generate-ontologies: $(ONTOLOGYDIR)/mp.db
 
 $(ONTOLOGYDIR)/mp.db:
 	semsql make $@
-
-
 
 
 #4
@@ -205,10 +192,6 @@ profiles/upheno2-lattice-hp-mp.cosine.tsv: $(TMP_DATA)/upheno2-lattice.db $(TMP_
 
 
 
-
-
-
-
 .PHONY: generate-mappings
 generate-mappings: $(TMP_DATA)/hp-lexmatch.sssom.tsv
 
@@ -219,6 +202,9 @@ generate-mappings: $(TMP_DATA)/mp-lexmatch.sssom.tsv
 $(TMP_DATA)/%-lexmatch.sssom.tsv: $(ONTOLOGYDIR)/%.owl
 	runoak -i $< lexmatch -o $@
 
+
+# Obtain lexmatch results then combine to upheno2
+$(TMP_DATA)/%-
 
 ### 3
 

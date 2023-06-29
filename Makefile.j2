@@ -1,15 +1,12 @@
-MAKEFLAGS 				+= 	--warn-undefined-variables
-SHELL 					:= 	bash
-.DEFAULT_GOAL			:= 	help
+MAKEFLAGS 				+=	--warn-undefined-variables
+SHELL 					:=	bash
+.DEFAULT_GOAL			:=	help
 URIBASE					:=	http://purl.obolibrary.org/obo
 TMP_DATA				:=	data/tmp
-MIRRORDIR				:= 	data/mirror
-ONTOLOGYDIR             :=	data/ontology
-MIR						:= 	true
+MIRRORDIR				:=	data/mirror
+ONTOLOGYDIR				:=	data/ontology
+MIR						:=	true
 ROBOT					:=  robot
-
-
-
 
 $(MIRRORDIR)/%.owl: mirror-%
 	if [ $(MIR) = true ] && [ -f $(TMP_DATA)/mirror-$*.owl ]; then mkdir -p $(MIRRORDIR) && if cmp -s $(TMP_DATA)/mirror-$*.owl $@ ; then echo "Mirror identical, ignoring."; else echo "Mirrors different, updating." &&\
@@ -43,8 +40,6 @@ $(ONTOLOGYDIR)/{{ ontology.id }}.db:
 	semsql make $@
 
 
-
-
 #4
 generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}_flat.owl
 
@@ -62,7 +57,6 @@ run-semsim: generate-ontologies
 {% for semsim in semantic_similarity_profiles %}
 {% if 'prefixes' in semsim -%}
 
-
 run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv
 
 {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv: $(TMP_DATA)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt
@@ -75,10 +69,6 @@ run-semsim:
 # run-semsim: {{ semsim.method }}-{{ semsim.ontology }}-branches-{{ semsim.branches.subject }}-{{ semsim.branches.object }}.tsv
 {% endif %}
 {% endfor %}
-
-
-
-
 
 .PHONY: generate-mappings
 {%- for mapping in mappings %}
