@@ -170,10 +170,6 @@ run-semsim: generate-ontologies
 
 
 
-run-semsim:
-	echo 'view with Nico'
-# run-semsim: semsimian-upheno2-lattice-branches-UPHENO:0001001-UPHENO:0001001.tsv
-
 
 run-semsim: profiles/upheno2-lattice-hp-mp.semsimian.tsv
 

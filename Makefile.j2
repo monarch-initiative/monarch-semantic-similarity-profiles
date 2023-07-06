@@ -63,10 +63,6 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 	semsql make $(TMP_DATA)/{{ semsim.ontology }}.db
 	runoak -i {{ semsim.method }}:sqlite:$< similarity -p i --set1-file $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt --set2-file $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt -O csv -o $@
 
-{% else %}
-run-semsim:
-	echo 'view with Nico'
-# run-semsim: {{ semsim.method }}-{{ semsim.ontology }}-branches-{{ semsim.branches.subject }}-{{ semsim.branches.object }}.tsv
 {% endif %}
 {% endfor %}
 
