@@ -34,7 +34,7 @@ $(TMP_DATA)/upheno2-lattice_mp_terms.txt: $(ONTOLOGYDIR)/upheno2-lattice.owl
 
 generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice.db
 
-$(ONTOLOGYDIR)/upheno2-lattice.db:
+$(ONTOLOGYDIR)/upheno2-lattice.db: $(ONTOLOGYDIR)/upheno2-lattice.owl
 	semsql make $@
 
 
@@ -63,7 +63,7 @@ $(TMP_DATA)/upheno1-equivalent_mp_terms.txt: $(ONTOLOGYDIR)/upheno1-equivalent.o
 
 generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent.db
 
-$(ONTOLOGYDIR)/upheno1-equivalent.db:
+$(ONTOLOGYDIR)/upheno1-equivalent.db: $(ONTOLOGYDIR)/upheno1-equivalent.owl
 	semsql make $@
 
 
@@ -92,7 +92,7 @@ $(TMP_DATA)/upheno1_mp_terms.txt: $(ONTOLOGYDIR)/upheno1.owl
 
 generate-ontologies: $(ONTOLOGYDIR)/upheno1.db
 
-$(ONTOLOGYDIR)/upheno1.db:
+$(ONTOLOGYDIR)/upheno1.db: $(ONTOLOGYDIR)/upheno1.owl
 	semsql make $@
 
 
@@ -121,7 +121,7 @@ $(TMP_DATA)/hp_mp_terms.txt: $(ONTOLOGYDIR)/hp.owl
 
 generate-ontologies: $(ONTOLOGYDIR)/hp.db
 
-$(ONTOLOGYDIR)/hp.db:
+$(ONTOLOGYDIR)/hp.db: $(ONTOLOGYDIR)/hp.owl
 	semsql make $@
 
 
@@ -150,7 +150,7 @@ $(TMP_DATA)/mp_mp_terms.txt: $(ONTOLOGYDIR)/mp.owl
 
 generate-ontologies: $(ONTOLOGYDIR)/mp.db
 
-$(ONTOLOGYDIR)/mp.db:
+$(ONTOLOGYDIR)/mp.db: $(ONTOLOGYDIR)/mp.owl
 	semsql make $@
 
 
@@ -173,16 +173,14 @@ run-semsim: generate-ontologies
 
 run-semsim: profiles/upheno2-lattice-hp-mp.semsimian.tsv
 
-profiles/upheno2-lattice-hp-mp.semsimian.tsv: $(TMP_DATA)/upheno2-lattice.db $(TMP_DATA)/upheno2-lattice_hp_terms.txt $(TMP_DATA)/upheno2-lattice_mp_terms.txt
-	semsql make $(TMP_DATA)/upheno2-lattice.db
+profiles/upheno2-lattice-hp-mp.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/upheno2-lattice_hp_terms.txt $(TMP_DATA)/upheno2-lattice_mp_terms.txt
 	runoak -i semsimian:sqlite:$< similarity -p i --set1-file $(TMP_DATA)/upheno2-lattice_hp_terms.txt --set2-file $(TMP_DATA)/upheno2-lattice_mp_terms.txt -O csv -o $@
 
 
 
 run-semsim: profiles/upheno2-lattice-hp-mp.cosine.tsv
 
-profiles/upheno2-lattice-hp-mp.cosine.tsv: $(TMP_DATA)/upheno2-lattice.db $(TMP_DATA)/upheno2-lattice_hp_terms.txt $(TMP_DATA)/upheno2-lattice_mp_terms.txt
-	semsql make $(TMP_DATA)/upheno2-lattice.db
+profiles/upheno2-lattice-hp-mp.cosine.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/upheno2-lattice_hp_terms.txt $(TMP_DATA)/upheno2-lattice_mp_terms.txt
 	runoak -i cosine:sqlite:$< similarity -p i --set1-file $(TMP_DATA)/upheno2-lattice_hp_terms.txt --set2-file $(TMP_DATA)/upheno2-lattice_mp_terms.txt -O csv -o $@
 
 
@@ -200,7 +198,6 @@ $(TMP_DATA)/%-lexmatch.sssom.tsv: $(ONTOLOGYDIR)/%.owl
 
 
 # Obtain lexmatch results then combine to upheno2
-$(TMP_DATA)/%-
 
 ### 3
 

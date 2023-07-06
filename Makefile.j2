@@ -36,7 +36,7 @@ $(TMP_DATA)/{{ ontology.id }}_mp_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
 
 generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.db
 
-$(ONTOLOGYDIR)/{{ ontology.id }}.db:
+$(ONTOLOGYDIR)/{{ ontology.id }}.db: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
 	semsql make $@
 
 
@@ -59,8 +59,7 @@ run-semsim: generate-ontologies
 
 run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv
 
-{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv: $(TMP_DATA)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt
-	semsql make $(TMP_DATA)/{{ semsim.ontology }}.db
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt
 	runoak -i {{ semsim.method }}:sqlite:$< similarity -p i --set1-file $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt --set2-file $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt -O csv -o $@
 
 {% endif %}
@@ -77,7 +76,6 @@ $(TMP_DATA)/%-lexmatch.sssom.tsv: $(ONTOLOGYDIR)/%.owl
 
 
 # Obtain lexmatch results then combine to upheno2
-$(TMP_DATA)/%-
 
 ### 3
 
