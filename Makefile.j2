@@ -27,12 +27,13 @@ mirror-{{ ontology.id }}:
 	if [ $(MIR) = true ]; then curl -L {{ ontology.mirror_from }} --create-dirs -o $(ONTOLOGYDIR)/{{ ontology.id }}-download.owl  --max-time 600 &&\
 		$(ROBOT) convert -i $(ONTOLOGYDIR)/{{ ontology.id }}-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
+{% if 'parent_term' in ontology -%}
 
-$(TMP_DATA)/{{ ontology.id }}_hp_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
-	runoak -i sqlite:$< descendants -p i HP:0000118 > $@
 
-$(TMP_DATA)/{{ ontology.id }}_mp_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
-	runoak -i sqlite:$< descendants -p i MP:0000001 > $@
+$(TMP_DATA)/{{ ontology.id }}_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
+	runoak -i sqlite:$< descendants -p i {{ ontology.parent_term }} > $@
+
+{% endif %}
 
 generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.db
 
@@ -57,10 +58,20 @@ run-semsim: generate-ontologies
 {% for semsim in semantic_similarity_profiles %}
 {% if 'prefixes' in semsim -%}
 
-run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv
+run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.{{semsim.threshold}}.tsv
 
-{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt
-	runoak -i {{ semsim.method }}:sqlite:$< similarity -p i --set1-file $(TMP_DATA)/{{ semsim.ontology }}_hp_terms.txt --set2-file $(TMP_DATA)/{{ semsim.ontology }}_mp_terms.txt -O csv -o $@
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.{{semsim.threshold}}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
+	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
+	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
+	--min-ancestor-information-content 4.0 \
+	--low-memory \
+ 	--min-jaccard-similarity {{semsim.threshold}} \
+	--autolabel \
+	-O csv \
+	-o $@
+
 
 {% endif %}
 {% endfor %}
