@@ -8,9 +8,9 @@ $(ONTOLOGYDIR)/upheno2-equivalent.owl: $(MIRRORDIR)/upheno2-lattice.owl $(ONTOLO
 	merge -i $< -o $@
 
 
-$(TMP_DATA)/upheno_custom_mapping.sssom.tsv: #is created using phenio-toolkit
+$(TMP_DATA)/upheno_custom_mapping.sssom.tsv: $(TMP_DATA)/upheno_species_lexical.csv $(TMP_DATA)/upheno_mapping_logical.csv #is created using phenio-toolkit
 	phenio-toolkit lexical-mapping \
-	--species-lexical $(TMP_DATA)/upheno_species_lexical.csv \
+	--species-lexical $< \
 	--mapping-logical $(TMP_DATA)/upheno_mapping_logical.csv \
 	--output $(TMP_DATA)
 
@@ -22,34 +22,15 @@ $(TMP_DATA)/upheno_custom_mapping.sssom.parsed.tsv: $(TMP_DATA)/upheno_custom_ma
 #there's no option like this:
 #sssom convert --output-format ttl
 $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl: $(TMP_DATA)/upheno_custom_mapping.sssom.parsed.tsv
-	sssom convert $<  -o $@
-# robot query -i $@
+	sssom convert $< -o $@
 
 
-$(ONTOLOGYDIR)/phenio-without-abstract.owl: $(MIRRORDIR)/phenio.owl
+$(ONTOLOGYDIR)/%-without-abstract.owl: $(MIRRORDIR)/%.owl
 	robot merge -i $< \
 	remove --select "BFO:*" --select classes \
 	remove --select "PATO:*" --select classes \
 	-o $@
 
-$(ONTOLOGYDIR)/phenio-without-abstract.db: $(ONTOLOGYDIR)/phenio-without-abstract.owl
-	./odk.sh semsql make $@
-
-$(ONTOLOGYDIR)/upheno2-lattice-without-abstract.owl: $(MIRRORDIR)/upheno2-lattice.owl
-	robot merge -i $< \
-	remove --select "BFO:*" --select classes \
-	remove --select "PATO:*" --select classes \
-	-o $@
-
-$(ONTOLOGYDIR)/upheno2-lattice-without-abstract.db: $(ONTOLOGYDIR)/upheno2-lattice-without-abstract.owl
-	./odk.sh semsql make $@
-
-$(ONTOLOGYDIR)/upheno1-without-abstract.owl: $(MIRRORDIR)/upheno1.owl
-	robot merge -i $< \
-	remove --select "BFO:*" --select classes \
-	remove --select "PATO:*" --select classes \
-	-o $@
-
-$(ONTOLOGYDIR)/upheno1-without-abstract.db: $(ONTOLOGYDIR)/upheno1-without-abstract.owl
+$(ONTOLOGYDIR)/%-without-abstract.db: $(ONTOLOGYDIR)/%-without-abstract.owl
 	./odk.sh semsql make $@
 
