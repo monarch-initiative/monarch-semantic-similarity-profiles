@@ -1,4 +1,4 @@
-SPARQLDIR				:=	data/sparql
+SPARQLDIR				:=	scripts/sparql
 
 $(ONTOLOGYDIR)/upheno1-equivalent.owl: $(MIRRORDIR)/upheno1-equivalent.owl
 	robot merge -i $< -o $@
@@ -31,6 +31,6 @@ $(ONTOLOGYDIR)/%-without-abstract.owl: $(MIRRORDIR)/%.owl
 	remove --select "PATO:*" --select classes \
 	-o $@
 
-$(ONTOLOGYDIR)/%-without-abstract.db: $(ONTOLOGYDIR)/%-without-abstract.owl
+$(ONTOLOGYDIR)/%.db: $(ONTOLOGYDIR)/%.owl
 	./odk.sh semsql make $@
 
