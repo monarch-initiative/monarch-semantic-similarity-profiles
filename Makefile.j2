@@ -95,6 +95,14 @@ upheno1-equivalent-inferred.owl: $(ONTOLOGYDIR)/upheno1-equivalent.owl
 
 generate-ontologies: upheno1-equivalent-inferred.owl
 
+
+.PHONY: public_release
+public_release:
+	gsutil mv gs://data-public-monarchinitiative/semantic-similarity/latest gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
+	(shell echo `date +%Y-%m-%d` > profiles/RELEASE_DATE)
+	gsutil cp profiles/RELEASE_DATE gs://data-public-monarchinitiative/semantic-similarity/latest/
+	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/latest/
+
 .PHONY: install
 
 install:
