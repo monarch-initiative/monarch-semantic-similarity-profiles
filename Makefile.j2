@@ -58,9 +58,9 @@ run-semsim: generate-ontologies
 {% for semsim in semantic_similarity_profiles %}
 {% if 'prefixes' in semsim -%}
 
-run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.{{semsim.threshold}}.tsv
+run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv
 
-{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.{{semsim.threshold}}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
 	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
@@ -98,10 +98,10 @@ generate-ontologies: upheno1-equivalent-inferred.owl
 
 .PHONY: public_release
 public_release:
-	gsutil mv gs://data-public-monarchinitiative/semantic-similarity/latest gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
-	(shell echo `date +%Y-%m-%d` > profiles/RELEASE_DATE)
-	gsutil cp profiles/RELEASE_DATE gs://data-public-monarchinitiative/semantic-similarity/latest/
-	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/latest/
+	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
+	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
+	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
+
 
 .PHONY: install
 
