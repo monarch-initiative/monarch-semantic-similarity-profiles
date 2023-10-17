@@ -23,7 +23,7 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice.owl
 mirror-upheno2-lattice:
 	mkdir -p $(TMP_DATA)
 	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/upheno2-lattice-download.owl  --max-time 600 &&\
-		$(ROBOT) convert -i $(ONTOLOGYDIR)/upheno2-lattice-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/upheno2-lattice-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 
 
@@ -39,7 +39,7 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice_flat.owl
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
 $(ONTOLOGYDIR)/upheno2-lattice_flat.owl: $(ONTOLOGYDIR)/upheno2-lattice.owl
-	robot remove --axioms "logical" --input $< --output $@
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
 generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent.owl
@@ -47,7 +47,7 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent.owl
 mirror-upheno1-equivalent:
 	mkdir -p $(TMP_DATA)
 	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/upheno1-equivalent-download.owl  --max-time 600 &&\
-		$(ROBOT) convert -i $(ONTOLOGYDIR)/upheno1-equivalent-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/upheno1-equivalent-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 
 
@@ -63,7 +63,7 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent_flat.owl
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
 $(ONTOLOGYDIR)/upheno1-equivalent_flat.owl: $(ONTOLOGYDIR)/upheno1-equivalent.owl
-	robot remove --axioms "logical" --input $< --output $@
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
 generate-ontologies: $(ONTOLOGYDIR)/upheno1.owl
@@ -71,7 +71,7 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno1.owl
 mirror-upheno1:
 	mkdir -p $(TMP_DATA)
 	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/upheno1-download.owl  --max-time 600 &&\
-		$(ROBOT) convert -i $(ONTOLOGYDIR)/upheno1-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/upheno1-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 
 
@@ -87,7 +87,7 @@ generate-ontologies: $(ONTOLOGYDIR)/upheno1_flat.owl
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
 $(ONTOLOGYDIR)/upheno1_flat.owl: $(ONTOLOGYDIR)/upheno1.owl
-	robot remove --axioms "logical" --input $< --output $@
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
 generate-ontologies: $(ONTOLOGYDIR)/hp.owl
@@ -95,10 +95,10 @@ generate-ontologies: $(ONTOLOGYDIR)/hp.owl
 mirror-hp:
 	mkdir -p $(TMP_DATA)
 	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/hp.owl --create-dirs -o $(ONTOLOGYDIR)/hp-download.owl  --max-time 600 &&\
-		$(ROBOT) convert -i $(ONTOLOGYDIR)/hp-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/hp-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 $(TMP_DATA)/hp_terms.txt: $(ONTOLOGYDIR)/hp.owl
-	runoak -i sqlite:$< descendants -p i HP:0000118 > $@
+	runoak -i sqlite:$< descendants -p i HP:0000118 -o $@
 
 
 
@@ -114,7 +114,7 @@ generate-ontologies: $(ONTOLOGYDIR)/hp_flat.owl
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
 $(ONTOLOGYDIR)/hp_flat.owl: $(ONTOLOGYDIR)/hp.owl
-	robot remove --axioms "logical" --input $< --output $@
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
 generate-ontologies: $(ONTOLOGYDIR)/mp.owl
@@ -122,10 +122,10 @@ generate-ontologies: $(ONTOLOGYDIR)/mp.owl
 mirror-mp:
 	mkdir -p $(TMP_DATA)
 	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/mp.owl --create-dirs -o $(ONTOLOGYDIR)/mp-download.owl  --max-time 600 &&\
-		$(ROBOT) convert -i $(ONTOLOGYDIR)/mp-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/mp-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 $(TMP_DATA)/mp_terms.txt: $(ONTOLOGYDIR)/mp.owl
-	runoak -i sqlite:$< descendants -p i MP:0000001 > $@
+	runoak -i sqlite:$< descendants -p i MP:0000001 -o $@
 
 
 
@@ -141,7 +141,7 @@ generate-ontologies: $(ONTOLOGYDIR)/mp_flat.owl
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
 $(ONTOLOGYDIR)/mp_flat.owl: $(ONTOLOGYDIR)/mp.owl
-	robot remove --axioms "logical" --input $< --output $@
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
 generate-ontologies: $(ONTOLOGYDIR)/zp.owl
@@ -149,10 +149,10 @@ generate-ontologies: $(ONTOLOGYDIR)/zp.owl
 mirror-zp:
 	mkdir -p $(TMP_DATA)
 	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/zp.owl --create-dirs -o $(ONTOLOGYDIR)/zp-download.owl  --max-time 600 &&\
-		$(ROBOT) convert -i $(ONTOLOGYDIR)/zp-download.owl -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/zp-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 $(TMP_DATA)/zp_terms.txt: $(ONTOLOGYDIR)/zp.owl
-	runoak -i sqlite:$< descendants -p i ZP:00000000 > $@
+	runoak -i sqlite:$< descendants -p i ZP:00000000 -o $@
 
 
 
@@ -168,7 +168,7 @@ generate-ontologies: $(ONTOLOGYDIR)/zp_flat.owl
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
 $(ONTOLOGYDIR)/zp_flat.owl: $(ONTOLOGYDIR)/zp.owl
-	robot remove --axioms "logical" --input $< --output $@
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
 
@@ -179,14 +179,13 @@ run-semsim: generate-ontologies
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-mp.semsimian.0.tsv
+run-semsim: profiles/upheno2-lattice-hp-mp.0.semsimian.tsv
 
-profiles/upheno2-lattice-hp-mp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno2-lattice-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0 \
 	--autolabel \
@@ -196,14 +195,13 @@ profiles/upheno2-lattice-hp-mp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno2-lattice.d
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-hp.semsimian.0.tsv
+run-semsim: profiles/upheno2-lattice-hp-hp.0.semsimian.tsv
 
-profiles/upheno2-lattice-hp-hp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno2-lattice-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0 \
 	--autolabel \
@@ -213,14 +211,13 @@ profiles/upheno2-lattice-hp-hp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno2-lattice.d
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-zp.semsimian.0.tsv
+run-semsim: profiles/upheno2-lattice-hp-zp.0.semsimian.tsv
 
-profiles/upheno2-lattice-hp-zp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno2-lattice-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0 \
 	--autolabel \
@@ -230,14 +227,13 @@ profiles/upheno2-lattice-hp-zp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno2-lattice.d
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-mp.semsimian.0.7.tsv
+run-semsim: profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv
 
-profiles/upheno2-lattice-hp-mp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0.7 \
 	--autolabel \
@@ -247,14 +243,13 @@ profiles/upheno2-lattice-hp-mp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-hp.semsimian.0.7.tsv
+run-semsim: profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv
 
-profiles/upheno2-lattice-hp-hp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0.7 \
 	--autolabel \
@@ -264,14 +259,13 @@ profiles/upheno2-lattice-hp-hp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-zp.semsimian.0.7.tsv
+run-semsim: profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv
 
-profiles/upheno2-lattice-hp-zp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0.7 \
 	--autolabel \
@@ -283,14 +277,13 @@ profiles/upheno2-lattice-hp-zp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 
 
 
-run-semsim: profiles/upheno1-hp-mp.semsimian.0.tsv
+run-semsim: profiles/upheno1-hp-mp.0.semsimian.tsv
 
-profiles/upheno1-hp-mp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno1-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0 \
 	--autolabel \
@@ -300,14 +293,13 @@ profiles/upheno1-hp-mp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp
 
 
 
-run-semsim: profiles/upheno1-hp-hp.semsimian.0.tsv
+run-semsim: profiles/upheno1-hp-hp.0.semsimian.tsv
 
-profiles/upheno1-hp-hp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno1-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0 \
 	--autolabel \
@@ -317,14 +309,13 @@ profiles/upheno1-hp-hp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp
 
 
 
-run-semsim: profiles/upheno1-hp-zp.semsimian.0.tsv
+run-semsim: profiles/upheno1-hp-zp.0.semsimian.tsv
 
-profiles/upheno1-hp-zp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno1-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0 \
 	--autolabel \
@@ -334,14 +325,13 @@ profiles/upheno1-hp-zp.semsimian.0.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp
 
 
 
-run-semsim: profiles/upheno1-hp-mp.semsimian.0.7.tsv
+run-semsim: profiles/upheno1-hp-mp.0.7.semsimian.tsv
 
-profiles/upheno1-hp-mp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno1-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0.7 \
 	--autolabel \
@@ -351,14 +341,13 @@ profiles/upheno1-hp-mp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
-run-semsim: profiles/upheno1-hp-hp.semsimian.0.7.tsv
+run-semsim: profiles/upheno1-hp-hp.0.7.semsimian.tsv
 
-profiles/upheno1-hp-hp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno1-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0.7 \
 	--autolabel \
@@ -368,14 +357,13 @@ profiles/upheno1-hp-hp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
-run-semsim: profiles/upheno1-hp-zp.semsimian.0.7.tsv
+run-semsim: profiles/upheno1-hp-zp.0.7.semsimian.tsv
 
-profiles/upheno1-hp-zp.semsimian.0.7.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/upheno1-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity 0.7 \
 	--autolabel \
@@ -407,6 +395,14 @@ upheno1-equivalent-inferred.owl: $(ONTOLOGYDIR)/upheno1-equivalent.owl
 	$(ROBOT) merge -i $< reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
 
 generate-ontologies: upheno1-equivalent-inferred.owl
+
+
+.PHONY: public_release
+public_release:
+	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
+	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
+	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
+
 
 .PHONY: install
 
