@@ -38,7 +38,7 @@ $(TMP_DATA)/{{ ontology.id }}_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
 generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.db
 
 $(ONTOLOGYDIR)/{{ ontology.id }}.db: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
-	./odk.sh semsql make $@
+	semsql make $@
 
 
 #4
@@ -58,14 +58,13 @@ run-semsim: generate-ontologies
 {% for semsim in semantic_similarity_profiles %}
 {% if 'prefixes' in semsim -%}
 
-run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.{{semsim.threshold}}.tsv
+run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv
 
-{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{ semsim.method }}.{{semsim.threshold}}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
-	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
+	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
 	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
-	--min-ancestor-information-content 4.0 \
 	--low-memory \
  	--min-jaccard-similarity {{semsim.threshold}} \
 	--autolabel \
@@ -94,6 +93,14 @@ upheno1-equivalent-inferred.owl: $(ONTOLOGYDIR)/upheno1-equivalent.owl
 	$(ROBOT) merge -i $< reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
 
 generate-ontologies: upheno1-equivalent-inferred.owl
+
+
+.PHONY: public_release
+public_release:
+	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
+	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
+	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
+
 
 .PHONY: install
 

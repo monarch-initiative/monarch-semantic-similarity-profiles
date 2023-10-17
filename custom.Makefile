@@ -1,10 +1,10 @@
 SPARQLDIR				:=	scripts/sparql
 
 $(ONTOLOGYDIR)/upheno1-equivalent.owl: $(MIRRORDIR)/upheno1-equivalent.owl
-	robot merge -i $< -o $@
+	$(ROBOT) merge -i $< -o $@
 
 $(ONTOLOGYDIR)/upheno2-equivalent.owl: $(MIRRORDIR)/upheno2-lattice.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
-	robot query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
+	$(ROBOT) query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
 	merge -i $< -o $@
 
 
@@ -24,13 +24,13 @@ $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl: $(TMP_DATA)/upheno_custom_m
 
 
 $(ONTOLOGYDIR)/%-without-abstract.owl: $(MIRRORDIR)/%.owl
-	robot merge -i $< \
+	$(ROBOT) merge -i $< \
 	remove --select "BFO:*" --select classes \
 	remove --select "PATO:*" --select classes \
 	-o $@
 
 $(ONTOLOGYDIR)/%.db: $(ONTOLOGYDIR)/%.owl
-	./odk.sh semsql make $@
+	semsql make $@
 
 
 $(TMP_DATA)/%.db:  $(TMP_DATA)/%.owl
@@ -47,7 +47,7 @@ $(TMP_DATA)/phenio.owl:
 	wget $(PHENIO_URL) -O $@
 
 $(TMP_DATA)/phenio-plus.owl: $(TMP_DATA)/phenio.owl $(TMP_DATA)/hpoa_d2p_preprocessed.ttl $(TMP_DATA)/hpoa_g2p_preprocessed.ttl
-	robot merge $(foreach n,$^, -i $(n)) -o $@
+	$(ROBOT) merge $(foreach n,$^, -i $(n)) -o $@
 #Here are the ones for the HPOA file:
 
 HPOA_D2P_MONARCH=https://data.monarchinitiative.org/monarch-kg-dev/latest/rdf/hpoa_disease_to_phenotype.nt.gz
