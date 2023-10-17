@@ -62,7 +62,7 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 
 {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
 	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
 	--low-memory \

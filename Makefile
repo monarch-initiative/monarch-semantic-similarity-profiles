@@ -183,7 +183,7 @@ run-semsim: profiles/upheno2-lattice-hp-mp.0.semsimian.tsv
 
 profiles/upheno2-lattice-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
 	--low-memory \
@@ -199,7 +199,7 @@ run-semsim: profiles/upheno2-lattice-hp-hp.0.semsimian.tsv
 
 profiles/upheno2-lattice-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
 	--low-memory \
@@ -215,7 +215,7 @@ run-semsim: profiles/upheno2-lattice-hp-zp.0.semsimian.tsv
 
 profiles/upheno2-lattice-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
 	--low-memory \
@@ -231,7 +231,7 @@ run-semsim: profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv
 
 profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
 	--low-memory \
@@ -247,7 +247,7 @@ run-semsim: profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv
 
 profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
 	--low-memory \
@@ -263,7 +263,7 @@ run-semsim: profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv
 
 profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
 	--low-memory \
@@ -281,7 +281,7 @@ run-semsim: profiles/upheno1-hp-mp.0.semsimian.tsv
 
 profiles/upheno1-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
 	--low-memory \
@@ -297,7 +297,7 @@ run-semsim: profiles/upheno1-hp-hp.0.semsimian.tsv
 
 profiles/upheno1-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
 	--low-memory \
@@ -313,7 +313,7 @@ run-semsim: profiles/upheno1-hp-zp.0.semsimian.tsv
 
 profiles/upheno1-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
 	--low-memory \
@@ -329,7 +329,7 @@ run-semsim: profiles/upheno1-hp-mp.0.7.semsimian.tsv
 
 profiles/upheno1-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
 	--low-memory \
@@ -345,7 +345,7 @@ run-semsim: profiles/upheno1-hp-hp.0.7.semsimian.tsv
 
 profiles/upheno1-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
 	--low-memory \
@@ -361,7 +361,7 @@ run-semsim: profiles/upheno1-hp-zp.0.7.semsimian.tsv
 
 profiles/upheno1-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
-	sudo austin -i 100 -o output2.austin /home/vinicius/workspace/monarch-semantic-similarity-profiles/.venv/bin/runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
 	--low-memory \
