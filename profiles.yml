@@ -23,7 +23,7 @@ ontologies:
     mirror_from: http://purl.obolibrary.org/obo/zp.owl
     parent_term: ZP:00000000
   - id: fbcv
-    mirror_from: http://purl.obolibrary.org/obo/fbcv.owl
+    mirror_from: http://purl.obolibrary.org/obo/dpo.owl
     parent_term: FBcv:0000000
 
 semantic_similarity_profiles:
