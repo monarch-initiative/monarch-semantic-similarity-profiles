@@ -24,7 +24,7 @@ ontologies:
     parent_term: ZP:00000000
   - id: fbcv
     mirror_from: http://purl.obolibrary.org/obo/dpo.owl
-    parent_term: FBcv:0000000
+    parent_term: FBcv:0001347
 
 semantic_similarity_profiles:
   - subset: all
