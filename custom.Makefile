@@ -42,9 +42,19 @@ $(TMP_DATA)/%.db:  $(TMP_DATA)/%.owl
 	@rm -f .template.db.tmp
 	@rm -f $(TMP_DATA)/$*-relation-graph.tsv.gz
 
+PHENIO_MONARCH_DB = https://data.monarchinitiative.org/monarch-kg/latest/phenio.db.gz
+
+$(ONTOLOGYDIR)/phenio-monarch.db.gz:
+	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
+	wget $(PHENIO_MONARCH_DB) -O $@
+
+$(ONTOLOGYDIR)/phenio-monarch.db: $(ONTOLOGYDIR)/phenio-monarch.db.gz
+	gunzip $<
+
 PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
 $(TMP_DATA)/phenio.owl:
 	wget $(PHENIO_URL) -O $@
+PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
 
 $(TMP_DATA)/phenio-plus.owl: $(TMP_DATA)/phenio.owl $(TMP_DATA)/hpoa_d2p_preprocessed.ttl $(TMP_DATA)/hpoa_g2p_preprocessed.ttl
 	$(ROBOT) merge $(foreach n,$^, -i $(n)) -o $@
