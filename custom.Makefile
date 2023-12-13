@@ -45,6 +45,7 @@ $(TMP_DATA)/%.db:  $(TMP_DATA)/%.owl
 PHENIO_MONARCH_DB = https://data.monarchinitiative.org/monarch-kg/latest/phenio.db.gz
 
 $(ONTOLOGYDIR)/phenio-monarch.db.gz:
+	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
 	wget $(PHENIO_MONARCH_DB) -O $@
 
 $(ONTOLOGYDIR)/phenio-monarch.db: $(ONTOLOGYDIR)/phenio-monarch.db.gz
