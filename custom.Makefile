@@ -1,7 +1,7 @@
 SPARQLDIR				:=	scripts/sparql
 
 $(ONTOLOGYDIR)/upheno1-equivalent.owl: $(MIRRORDIR)/upheno1-equivalent.owl
-	$(ROBOT) merge -i $< -o $@
+	$(ROBOT) merge -i $< rename --mapping ZP:00000000 ZP:0000000 -o $@
 
 $(ONTOLOGYDIR)/upheno2-equivalent.owl: $(MIRRORDIR)/upheno2-lattice.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
 	$(ROBOT) query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
@@ -42,9 +42,19 @@ $(TMP_DATA)/%.db:  $(TMP_DATA)/%.owl
 	@rm -f .template.db.tmp
 	@rm -f $(TMP_DATA)/$*-relation-graph.tsv.gz
 
+PHENIO_MONARCH_DB = https://data.monarchinitiative.org/monarch-kg/latest/phenio.db.gz
+
+$(ONTOLOGYDIR)/phenio-monarch.db.gz:
+	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
+	wget $(PHENIO_MONARCH_DB) -O $@
+
+$(ONTOLOGYDIR)/phenio-monarch.db: $(ONTOLOGYDIR)/phenio-monarch.db.gz
+	gunzip $<
+
 PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
 $(TMP_DATA)/phenio.owl:
 	wget $(PHENIO_URL) -O $@
+PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
 
 $(TMP_DATA)/phenio-plus.owl: $(TMP_DATA)/phenio.owl $(TMP_DATA)/hpoa_d2p_preprocessed.ttl $(TMP_DATA)/hpoa_g2p_preprocessed.ttl
 	$(ROBOT) merge $(foreach n,$^, -i $(n)) -o $@
@@ -68,3 +78,16 @@ $(TMP_DATA)/hpoa_%.ttl: $(TMP_DATA)/hpoa_%.nt
 
 $(TMP_DATA)/hpoa_%_preprocessed.ttl: $(TMP_DATA)/hpoa_%.nt
 	$(ROBOT) query -i $< --update scripts/sparql/preprocess_$*.ru -o $@ > /dev/null
+
+
+#HP
+$(TMP_DATA)/phenio_monarch_hp_ic.tsv: $(TMP_DATA)/gene_phenotype.9606.tsv
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^HP: -o $@
+
+#MP
+$(TMP_DATA)/phenio_monarch_mp_ic.tsv: $(TMP_DATA)/gene_phenotype.10090.tsv
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^MP: -o $@
+
+#ZP
+$(TMP_DATA)/phenio_monarch_zp_ic.tsv: $(TMP_DATA)/gene_phenotype.7955.tsv
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^ZP: -o $@

@@ -60,19 +60,37 @@ run-semsim: generate-ontologies
 
 run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv
 
-{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/zp_terms.txt
+
+
+{% if 'ic' in semsim -%}
+
+
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
 	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
 	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
-	--low-memory \
  	--min-jaccard-similarity {{semsim.threshold}} \
-	--autolabel \
+	--information-content-file  $(TMP_DATA)/{{ semsim.ic }} \
+	-O csv \
+	-o $@
+
+{% else %}
+
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt
+	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
+	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
+	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
+ 	--min-jaccard-similarity {{semsim.threshold}} \
 	-O csv \
 	-o $@
 
 
 {% endif %}
+
+{% endif %}
+
 {% endfor %}
 
 .PHONY: generate-mappings
