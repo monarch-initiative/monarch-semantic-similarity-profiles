@@ -1,170 +1,244 @@
 directories:
-   profiles: profiles
-
+  profiles: profiles
 
 mappings:
-   - id: hp
-   - id: mp
-   - id: zp
+  - id: hp
+  - id: mp
+  - id: zp
+  - id: xpo
+  - id: fbcv
 ontologies:
-   - id: upheno2-lattice
-     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
-   - id: upheno1-equivalent
-     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
-   - id: upheno1
-     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
-   - id: hp
-     mirror_from: http://purl.obolibrary.org/obo/hp.owl
-     parent_term: HP:0000118
-   - id: mp
-     mirror_from: http://purl.obolibrary.org/obo/mp.owl
-     parent_term: MP:0000001
-   - id: zp
-     mirror_from: http://purl.obolibrary.org/obo/zp.owl
-     parent_term: ZP:00000000
+  - id: upheno2-lattice
+    mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+  - id: upheno1-equivalent
+    mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+  - id: upheno1
+    mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+  - id: hp
+    mirror_from: http://purl.obolibrary.org/obo/hp.owl
+    parent_term: HP:0000118
+  - id: mp
+    mirror_from: http://purl.obolibrary.org/obo/mp.owl
+    parent_term: MP:0000001
+  - id: zp
+    mirror_from: http://purl.obolibrary.org/obo/zp.owl
+    parent_term: ZP:00000000
+  - id: fbcv
+    mirror_from: http://purl.obolibrary.org/obo/dpo.owl
+    parent_term: FBcv:0001347
+  - id: xpo
+    mirror_from: http://purl.obolibrary.org/obo/xpo.owl
+    parent_term: XPO:00000000
+
 semantic_similarity_profiles:
-   - subset: all
-     method: semsimian
-     ontology: upheno2-lattice
-     threshold: 0
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-   - subset: hp-mp
-     method: semsimian
-     threshold: 0
-     ontology: upheno2-lattice
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: mp
-   - subset: hp-hp
-     method: semsimian
-     ontology: upheno2-lattice
-     threshold: 0
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: hp
-   - subset: hp-zp
-     method: semsimian
-     ontology: upheno2-lattice
-     threshold: 0
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: zp
-   - subset: hp-mp
-     method: semsimian
-     ontology: upheno2-lattice
-     threshold: 0.7
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: mp
-   - subset: hp-hp
-     method: semsimian
-     ontology: upheno2-lattice
-     threshold: 0.7
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: hp
-   - subset: hp-zp
-     method: semsimian
-     ontology: upheno2-lattice
-     threshold: 0.7
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: zp
+  - subset: all
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+  - subset: hp-mp
+    method: semsimian
+    threshold: 0
+    ontology: upheno2-lattice
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-hp
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-zp
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-mp
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0.7
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-hp
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0.7
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-zp
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0.7
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: zp
 
-   - subset: all
-     method: semsimian
-     ontology: upheno1
-     threshold: 0
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-   - subset: hp-mp
-     method: semsimian
-     threshold: 0
-     ontology: upheno1
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: mp
-   - subset: hp-hp
-     method: semsimian
-     ontology: upheno1
-     threshold: 0
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: hp
-   - subset: hp-zp
-     method: semsimian
-     ontology: upheno1
-     threshold: 0
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: zp
-   - subset: hp-mp
-     method: semsimian
-     ontology: upheno1
-     threshold: 0.7
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: mp
-   - subset: hp-hp
-     method: semsimian
-     ontology: upheno1
-     threshold: 0.7
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: hp
-   - subset: hp-zp
-     method: semsimian
-     ontology: upheno1
-     threshold: 0.7
-     branches:
-        subject: UPHENO:0001001
-        object: UPHENO:0001001
-     prefixes:
-        subject: hp
-        object: zp
+  - subset: all
+    method: semsimian
+    ontology: upheno1
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+  - subset: hp-mp
+    method: semsimian
+    threshold: 0
+    ontology: upheno1
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-hp
+    method: semsimian
+    ontology: upheno1
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-zp
+    method: semsimian
+    ontology: upheno1
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-mp
+    method: semsimian
+    ontology: upheno1
+    threshold: 0.7
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-hp
+    method: semsimian
+    ontology: upheno1
+    threshold: 0.7
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-zp
+    method: semsimian
+    ontology: upheno1
+    threshold: 0.7
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-fbcv
+    method: semsimian
+    ontology: upheno1
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: fbcv
+  - subset: hp-fbcv
+    method: semsimian
+    ontology: upheno2-lattice
+    threshold: 0
+    branches:
+      subject: UPHENO:0001001
+      object: UPHENO:0001001
+    prefixes:
+      subject: hp
+      object: fbcv
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-fbcv
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0
+    prefixes:
+      subject: hp
+      object: fbcv
 
-   # - subset: hp-mp
-   #   method: cosine
-   #   ontology: upheno2-lattice
-   #   branches:
-   #      subject: UPHENO:0001001
-   #      object: UPHENO:0001001
-   #   prefixes:
-   #      subject: hp
-   #      object: mp
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0.4
+    ic: phenio_monarch_hp_ic.tsv
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-mp
+    method: semsimian
+    ontology: phenio-monarch
+    ic: phenio_monarch_hp_mp_ic.tsv
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-zp
+    method: semsimian
+    ontology: phenio-monarch
+    ic: phenio_monarch_hp_zp_ic.tsv
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-xpo
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: xpo
+
+  # - subset: hp-mp
+  #   method: cosine
+  #   ontology: upheno2-lattice
+  #   branches:
+  #      subject: UPHENO:0001001
+  #      object: UPHENO:0001001
+  #   prefixes:
+  #      subject: hp
+  #      object: mp
