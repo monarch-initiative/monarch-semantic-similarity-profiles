@@ -1,7 +1,7 @@
 SPARQLDIR				:=	scripts/sparql
 
 $(ONTOLOGYDIR)/upheno1-equivalent.owl: $(MIRRORDIR)/upheno1-equivalent.owl
-	$(ROBOT) merge -i $< rename --mapping ZP:00000000 ZP:0000000 -o $@
+	$(ROBOT) merge -i $< -o $@
 
 $(ONTOLOGYDIR)/upheno2-equivalent.owl: $(MIRRORDIR)/upheno2-lattice.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
 	$(ROBOT) query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
@@ -54,7 +54,7 @@ $(ONTOLOGYDIR)/phenio-monarch.db: $(ONTOLOGYDIR)/phenio-monarch.db.gz
 PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
 $(TMP_DATA)/phenio.owl:
 	wget $(PHENIO_URL) -O $@
-PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
+
 
 $(TMP_DATA)/phenio-plus.owl: $(TMP_DATA)/phenio.owl $(TMP_DATA)/hpoa_d2p_preprocessed.ttl $(TMP_DATA)/hpoa_g2p_preprocessed.ttl
 	$(ROBOT) merge $(foreach n,$^, -i $(n)) -o $@
