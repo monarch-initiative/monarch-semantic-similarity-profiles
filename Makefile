@@ -152,7 +152,7 @@ mirror-zp:
 		$(ROBOT) merge -i $(ONTOLOGYDIR)/zp-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 $(TMP_DATA)/zp_terms.txt: $(ONTOLOGYDIR)/zp.owl
-	runoak -i sqlite:$< descendants -p i ZP:00000000 -o $@
+	runoak -i sqlite:$< descendants -p i ZP:0000000 -o $@
 
 
 
@@ -634,17 +634,15 @@ run-semsim: profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv
 
 
 
-
-
 profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/xpo_terms.txt \
  	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv \
 	-O csv \
 	-o $@
-
 
 
 
