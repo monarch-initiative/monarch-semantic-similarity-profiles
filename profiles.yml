@@ -22,7 +22,7 @@ ontologies:
     parent_term: MP:0000001
   - id: zp
     mirror_from: http://purl.obolibrary.org/obo/zp.owl
-    parent_term: ZP:00000000
+    parent_term: ZP:0000000
   - id: fbcv
     mirror_from: http://purl.obolibrary.org/obo/dpo.owl
     parent_term: FBcv:0001347
@@ -229,6 +229,7 @@ semantic_similarity_profiles:
     method: semsimian
     ontology: phenio-monarch
     threshold: 0.4
+    ic: phenio_monarch_hp_xpo_ic.tsv
     prefixes:
       subject: hp
       object: xpo
