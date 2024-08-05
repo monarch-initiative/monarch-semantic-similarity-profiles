@@ -233,6 +233,34 @@ semantic_similarity_profiles:
     prefixes:
       subject: hp
       object: xpo
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-mp
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-zp
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-xpo
+    method: semsimian
+    ontology: phenio-monarch
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: xpo
 
   # - subset: hp-mp
   #   method: cosine
