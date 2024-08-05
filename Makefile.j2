@@ -65,7 +65,7 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 {% if 'ic' in semsim -%}
 
 
-{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.ic.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
 	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
