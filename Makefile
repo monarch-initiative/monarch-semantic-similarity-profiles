@@ -734,6 +734,9 @@ profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.
 
 
 
+profiles/%.gz: profiles/%.tsv
+	gzip -c $< > $@.tmp && mv $@.tmp $@
+
 .PHONY: generate-mappings
 generate-mappings: $(TMP_DATA)/hp-lexmatch.sssom.tsv
 

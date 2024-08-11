@@ -93,6 +93,9 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 
 {% endfor %}
 
+{{ directories.profiles }}/%.gz: {{ directories.profiles }}/%.tsv
+	gzip -c $< > $@.tmp && mv $@.tmp $@
+
 .PHONY: generate-mappings
 {%- for mapping in mappings %}
 generate-mappings: $(TMP_DATA)/{{ mapping.id }}-lexmatch.sssom.tsv
