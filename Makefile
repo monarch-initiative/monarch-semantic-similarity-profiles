@@ -18,51 +18,75 @@ $(MIRRORDIR)/%.owl: mirror-%
 $(ONTOLOGYDIR)/%.owl: $(MIRRORDIR)/%.owl
 	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
 	cp $< $@
-generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice.owl
+generate-ontologies: $(ONTOLOGYDIR)/phenio-flat.owl
 
-mirror-upheno2-lattice:
+mirror-phenio-flat:
 	mkdir -p $(TMP_DATA)
-	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/upheno2-lattice-download.owl  --max-time 600 &&\
-		$(ROBOT) merge -i $(ONTOLOGYDIR)/upheno2-lattice-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/phenio-flat-download.owl  --max-time 600 &&\
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/phenio-flat-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 
 
-generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice.db
+generate-ontologies: $(ONTOLOGYDIR)/phenio-flat.db
 
-$(ONTOLOGYDIR)/upheno2-lattice.db: $(ONTOLOGYDIR)/upheno2-lattice.owl
+$(ONTOLOGYDIR)/phenio-flat.db: $(ONTOLOGYDIR)/phenio-flat.owl
 	semsql make $@
 
 
 #4
-generate-ontologies: $(ONTOLOGYDIR)/upheno2-lattice_flat.owl
+generate-ontologies: $(ONTOLOGYDIR)/phenio-flat_flat.owl
 
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
-$(ONTOLOGYDIR)/upheno2-lattice_flat.owl: $(ONTOLOGYDIR)/upheno2-lattice.owl
+$(ONTOLOGYDIR)/phenio-flat_flat.owl: $(ONTOLOGYDIR)/phenio-flat.owl
 	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
-generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent.owl
+generate-ontologies: $(ONTOLOGYDIR)/phenio-lattice.owl
 
-mirror-upheno1-equivalent:
+mirror-phenio-lattice:
 	mkdir -p $(TMP_DATA)
-	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/upheno1-equivalent-download.owl  --max-time 600 &&\
-		$(ROBOT) merge -i $(ONTOLOGYDIR)/upheno1-equivalent-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/phenio-lattice-download.owl  --max-time 600 &&\
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/phenio-lattice-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
 
 
-generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent.db
+generate-ontologies: $(ONTOLOGYDIR)/phenio-lattice.db
 
-$(ONTOLOGYDIR)/upheno1-equivalent.db: $(ONTOLOGYDIR)/upheno1-equivalent.owl
+$(ONTOLOGYDIR)/phenio-lattice.db: $(ONTOLOGYDIR)/phenio-lattice.owl
 	semsql make $@
 
 
 #4
-generate-ontologies: $(ONTOLOGYDIR)/upheno1-equivalent_flat.owl
+generate-ontologies: $(ONTOLOGYDIR)/phenio-lattice_flat.owl
 
 #4
 # Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
-$(ONTOLOGYDIR)/upheno1-equivalent_flat.owl: $(ONTOLOGYDIR)/upheno1-equivalent.owl
+$(ONTOLOGYDIR)/phenio-lattice_flat.owl: $(ONTOLOGYDIR)/phenio-lattice.owl
+	$(ROBOT) remove --axioms "logical" --input $< --output $@
+
+
+generate-ontologies: $(ONTOLOGYDIR)/phenio-equivalent.owl
+
+mirror-phenio-equivalent:
+	mkdir -p $(TMP_DATA)
+	if [ $(MIR) = true ]; then curl -L http://purl.obolibrary.org/obo/upheno.owl --create-dirs -o $(ONTOLOGYDIR)/phenio-equivalent-download.owl  --max-time 600 &&\
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/phenio-equivalent-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+
+
+
+generate-ontologies: $(ONTOLOGYDIR)/phenio-equivalent.db
+
+$(ONTOLOGYDIR)/phenio-equivalent.db: $(ONTOLOGYDIR)/phenio-equivalent.owl
+	semsql make $@
+
+
+#4
+generate-ontologies: $(ONTOLOGYDIR)/phenio-equivalent_flat.owl
+
+#4
+# Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
+$(ONTOLOGYDIR)/phenio-equivalent_flat.owl: $(ONTOLOGYDIR)/phenio-equivalent.owl
 	$(ROBOT) remove --axioms "logical" --input $< --output $@
 
 
@@ -234,13 +258,23 @@ run-semsim: generate-ontologies
 
 
 
-run-semsim: profiles/upheno2-lattice-hp-mp.0.semsimian.tsv
+
+
+  # endif method
 
 
 
 
 
-profiles/upheno2-lattice-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+run-semsim: profiles/phenio-lattice-hp-mp.0.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -254,14 +288,21 @@ profiles/upheno2-lattice-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.d
 
 
 
-
-run-semsim: profiles/upheno2-lattice-hp-hp.0.semsimian.tsv
-
+  # endif method
 
 
 
 
-profiles/upheno2-lattice-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+
+run-semsim: profiles/phenio-lattice-hp-hp.0.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -275,14 +316,21 @@ profiles/upheno2-lattice-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.d
 
 
 
-
-run-semsim: profiles/upheno2-lattice-hp-zp.0.semsimian.tsv
-
+  # endif method
 
 
 
 
-profiles/upheno2-lattice-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+
+run-semsim: profiles/phenio-lattice-hp-zp.0.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -296,14 +344,21 @@ profiles/upheno2-lattice-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.d
 
 
 
-
-run-semsim: profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv
-
+  # endif method
 
 
 
 
-profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+
+run-semsim: profiles/phenio-lattice-hp-mp.0.7.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -317,14 +372,21 @@ profiles/upheno2-lattice-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 
 
 
-
-run-semsim: profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv
-
+  # endif method
 
 
 
 
-profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+
+run-semsim: profiles/phenio-lattice-hp-hp.0.7.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -338,14 +400,21 @@ profiles/upheno2-lattice-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 
 
 
-
-run-semsim: profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv
-
+  # endif method
 
 
 
 
-profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+
+run-semsim: profiles/phenio-lattice-hp-zp.0.7.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -358,6 +427,16 @@ profiles/upheno2-lattice-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 
 
 
+
+  # endif method
+
+
+
+
+
+
+
+  # endif method
 
 
 
@@ -369,7 +448,9 @@ run-semsim: profiles/upheno1-hp-mp.0.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -379,6 +460,11 @@ profiles/upheno1-hp-mp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp
 	-o $@
 
 
+
+
+
+
+  # endif method
 
 
 
@@ -390,7 +476,9 @@ run-semsim: profiles/upheno1-hp-hp.0.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -404,6 +492,11 @@ profiles/upheno1-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/upheno1-hp-zp.0.semsimian.tsv
 
@@ -411,7 +504,9 @@ run-semsim: profiles/upheno1-hp-zp.0.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -425,6 +520,11 @@ profiles/upheno1-hp-zp.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/upheno1-hp-mp.0.7.semsimian.tsv
 
@@ -432,7 +532,9 @@ run-semsim: profiles/upheno1-hp-mp.0.7.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -446,6 +548,11 @@ profiles/upheno1-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/upheno1-hp-hp.0.7.semsimian.tsv
 
@@ -453,7 +560,9 @@ run-semsim: profiles/upheno1-hp-hp.0.7.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -467,6 +576,11 @@ profiles/upheno1-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/upheno1-hp-zp.0.7.semsimian.tsv
 
@@ -474,7 +588,9 @@ run-semsim: profiles/upheno1-hp-zp.0.7.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -488,6 +604,11 @@ profiles/upheno1-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/upheno1-hp-fbcv.0.semsimian.tsv
 
@@ -495,7 +616,9 @@ run-semsim: profiles/upheno1-hp-fbcv.0.semsimian.tsv
 
 
 
+
 profiles/upheno1-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -509,14 +632,21 @@ profiles/upheno1-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
-
-run-semsim: profiles/upheno2-lattice-hp-fbcv.0.semsimian.tsv
-
+  # endif method
 
 
 
 
-profiles/upheno2-lattice-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
+
+run-semsim: profiles/phenio-lattice-hp-fbcv.0.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-lattice-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-lattice.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -526,6 +656,11 @@ profiles/upheno2-lattice-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/upheno2-lattice
 	-o $@
 
 
+
+
+
+
+  # endif method
 
 
 
@@ -537,7 +672,9 @@ run-semsim: profiles/phenio-monarch-hp-hp.0.semsimian.tsv
 
 
 
+
 profiles/phenio-monarch-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -551,6 +688,11 @@ profiles/phenio-monarch-hp-hp.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db 
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-fbcv.0.semsimian.tsv
 
@@ -558,7 +700,9 @@ run-semsim: profiles/phenio-monarch-hp-fbcv.0.semsimian.tsv
 
 
 
+
 profiles/phenio-monarch-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -572,12 +716,18 @@ profiles/phenio-monarch-hp-fbcv.0.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.d
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv
 
 
 
 profiles/phenio-monarch-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -591,12 +741,18 @@ profiles/phenio-monarch-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarc
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-mp.0.4.semsimian.tsv
 
 
 
 profiles/phenio-monarch-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -610,12 +766,18 @@ profiles/phenio-monarch-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarc
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-zp.0.4.semsimian.tsv
 
 
 
 profiles/phenio-monarch-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -629,12 +791,18 @@ profiles/phenio-monarch-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarc
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv
 
 
 
 profiles/phenio-monarch-hp-xpo.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -648,6 +816,11 @@ profiles/phenio-monarch-hp-xpo.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monar
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv
 
@@ -655,7 +828,9 @@ run-semsim: profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv
 
 
 
+
 profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -669,6 +844,11 @@ profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.d
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-mp.0.4.semsimian.tsv
 
@@ -676,7 +856,9 @@ run-semsim: profiles/phenio-monarch-hp-mp.0.4.semsimian.tsv
 
 
 
+
 profiles/phenio-monarch-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -690,6 +872,11 @@ profiles/phenio-monarch-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.d
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-zp.0.4.semsimian.tsv
 
@@ -697,7 +884,9 @@ run-semsim: profiles/phenio-monarch-hp-zp.0.4.semsimian.tsv
 
 
 
+
 profiles/phenio-monarch-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -711,6 +900,11 @@ profiles/phenio-monarch-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.d
 
 
 
+  # endif method
+
+
+
+
 
 run-semsim: profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv
 
@@ -718,7 +912,9 @@ run-semsim: profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv
 
 
 
+
 profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -731,6 +927,432 @@ profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.
 
 
 
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-hp.0.4.semsimian.tsv
+
+
+
+profiles/phenio-flat-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/hp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-mp.0.4.semsimian.tsv
+
+
+
+profiles/phenio-flat-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/mp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-zp.0.4.semsimian.tsv
+
+
+
+profiles/phenio-flat-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/zp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv
+
+
+
+profiles/phenio-flat-hp-xpo.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/xpo_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-hp.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-flat-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/hp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-mp.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-flat-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/mp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-zp.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-flat-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/zp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/xpo_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv
+
+
+
+profiles/phenio-equivalent-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/hp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv
+
+
+
+profiles/phenio-equivalent-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/mp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-zp.0.4.semsimian.tsv
+
+
+
+profiles/phenio-equivalent-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/zp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-xpo.0.4.semsimian.tsv
+
+
+
+profiles/phenio-equivalent-hp-xpo.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/xpo_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv \
+	-O csv \
+	-o $@
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/hp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/mp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-zp.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-equivalent-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/zp_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+
+
+run-semsim: profiles/phenio-equivalent-hp-xpo.0.4.semsimian.tsv
+
+
+
+
+
+
+profiles/phenio-equivalent-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
+	pip install oaklib semsimian -U --break-system-packages
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/xpo_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
 
 
 
@@ -770,6 +1392,13 @@ public_release:
 	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
 	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
 
+
+
+# Rule to generate the Markdown file
+$(OUTPUT): $(TEMPLATE) $(YAML_FILE)
+	@echo "Generating Markdown file from template..."
+	jinjanate $(TEMPLATE) $(YAML_FILE) -o $(OUTPUT)
+	@echo "Generated $(OUTPUT)"
 
 .PHONY: install
 

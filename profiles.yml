@@ -8,9 +8,11 @@ mappings:
   - id: xpo
   - id: fbcv
 ontologies:
-  - id: upheno2-lattice
+  - id: phenio-flat
     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
-  - id: upheno1-equivalent
+  - id: phenio-lattice
+    mirror_from: http://purl.obolibrary.org/obo/upheno.owl
+  - id: phenio-equivalent
     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
   - id: upheno1
     mirror_from: http://purl.obolibrary.org/obo/upheno.owl
@@ -33,7 +35,7 @@ ontologies:
 semantic_similarity_profiles:
   - subset: all
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0
     branches:
       subject: UPHENO:0001001
@@ -41,7 +43,7 @@ semantic_similarity_profiles:
   - subset: hp-mp
     method: semsimian
     threshold: 0
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     branches:
       subject: UPHENO:0001001
       object: UPHENO:0001001
@@ -50,7 +52,7 @@ semantic_similarity_profiles:
       object: mp
   - subset: hp-hp
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0
     branches:
       subject: UPHENO:0001001
@@ -60,7 +62,7 @@ semantic_similarity_profiles:
       object: hp
   - subset: hp-zp
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0
     branches:
       subject: UPHENO:0001001
@@ -70,7 +72,7 @@ semantic_similarity_profiles:
       object: zp
   - subset: hp-mp
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0.7
     branches:
       subject: UPHENO:0001001
@@ -80,7 +82,7 @@ semantic_similarity_profiles:
       object: mp
   - subset: hp-hp
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0.7
     branches:
       subject: UPHENO:0001001
@@ -90,7 +92,7 @@ semantic_similarity_profiles:
       object: hp
   - subset: hp-zp
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0.7
     branches:
       subject: UPHENO:0001001
@@ -178,7 +180,7 @@ semantic_similarity_profiles:
       object: fbcv
   - subset: hp-fbcv
     method: semsimian
-    ontology: upheno2-lattice
+    ontology: phenio-lattice
     threshold: 0
     branches:
       subject: UPHENO:0001001
@@ -271,3 +273,131 @@ semantic_similarity_profiles:
   #   prefixes:
   #      subject: hp
   #      object: mp
+
+
+#### FLAT
+
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-flat
+    threshold: 0.4
+    ic: phenio_monarch_hp_ic.tsv
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-mp
+    method: semsimian
+    ontology: phenio-flat
+    ic: phenio_monarch_hp_mp_ic.tsv
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-zp
+    method: semsimian
+    ontology: phenio-flat
+    ic: phenio_monarch_hp_zp_ic.tsv
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-xpo
+    method: semsimian
+    ontology: phenio-flat
+    threshold: 0.4
+    ic: phenio_monarch_hp_xpo_ic.tsv
+    prefixes:
+      subject: hp
+      object: xpo
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-flat
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-mp
+    method: semsimian
+    ontology: phenio-flat
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-zp
+    method: semsimian
+    ontology: phenio-flat
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-xpo
+    method: semsimian
+    ontology: phenio-flat
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: xpo
+
+
+#### EQUIVALENT
+
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-equivalent
+    threshold: 0.4
+    ic: phenio_monarch_hp_ic.tsv
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-mp
+    method: semsimian
+    ontology: phenio-equivalent
+    ic: phenio_monarch_hp_mp_ic.tsv
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-zp
+    method: semsimian
+    ontology: phenio-equivalent
+    ic: phenio_monarch_hp_zp_ic.tsv
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-xpo
+    method: semsimian
+    ontology: phenio-equivalent
+    threshold: 0.4
+    ic: phenio_monarch_hp_xpo_ic.tsv
+    prefixes:
+      subject: hp
+      object: xpo
+  - subset: hp-hp
+    method: semsimian
+    ontology: phenio-equivalent
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: hp
+  - subset: hp-mp
+    method: semsimian
+    ontology: phenio-equivalent
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: mp
+  - subset: hp-zp
+    method: semsimian
+    ontology: phenio-equivalent
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: zp
+  - subset: hp-xpo
+    method: semsimian
+    ontology: phenio-equivalent
+    threshold: 0.4
+    prefixes:
+      subject: hp
+      object: xpo

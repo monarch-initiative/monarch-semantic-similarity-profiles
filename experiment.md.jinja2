@@ -1,0 +1,43 @@
+{% raw %}
+# Ontology Configuration
+
+## Directories
+
+- **Profiles Directory**: `{{ directories.profiles }}`
+
+## Mappings
+
+{% for mapping in mappings %}
+- **Mapping ID**: `{{ mapping.id }}`
+{% endfor %}
+
+## Ontologies
+
+{% for ontology in ontologies %}
+- **Ontology ID**: `{{ ontology.id }}`
+  - **Mirror From**: [{{ ontology.mirror_from }}]({{ ontology.mirror_from }})
+  {% if ontology.parent_term %}
+  - **Parent Term**: `{{ ontology.parent_term }}`
+  {% endif %}
+{% endfor %}
+
+## Semantic Similarity Profiles
+
+{% for profile in semantic_similarity_profiles %}
+- **Subset**: `{{ profile.subset }}`
+  - **Method**: `{{ profile.method }}`
+  - **Ontology**: `{{ profile.ontology }}`
+  - **Threshold**: `{{ profile.threshold }}`
+  - **Branches**:
+    - **Subject**: `{{ profile.branches.subject }}`
+    - **Object**: `{{ profile.branches.object }}`
+  {% if profile.prefixes %}
+  - **Prefixes**:
+    - **Subject**: `{{ profile.prefixes.subject }}`
+    - **Object**: `{{ profile.prefixes.object }}`
+  {% endif %}
+  {% if profile.ic %}
+  - **IC**: `{{ profile.ic }}`
+  {% endif %}
+{% endfor %}
+{% endraw %}

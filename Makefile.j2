@@ -56,6 +56,16 @@ $(ONTOLOGYDIR)/{{ ontology.id }}_flat.owl: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
 run-semsim: generate-ontologies
 
 {% for semsim in semantic_similarity_profiles %}
+
+{% if 'custom' in semsim.method -%}
+
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv:
+	echo "$@ has to be manually configured"
+	false
+
+
+{% else %}
+
 {% if 'prefixes' in semsim -%}
 
 run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv
@@ -65,17 +75,19 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 {% if 'ic' in semsim -%}
 
 
+
 {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.ic.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt $(TMP_DATA)/{{ semsim.ic }}
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
 	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
 	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
- 	--min-jaccard-similarity {{semsim.threshold}} \
+ 	--min-jaccard-similarity {{ semsim.threshold }} \
 	--information-content-file  $(TMP_DATA)/{{ semsim.ic }} \
 	-O csv \
 	-o $@
 
 {% else %}
+
 
 {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
@@ -90,6 +102,8 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 {% endif %}
 
 {% endif %}
+
+{% endif %}  # endif method
 
 {% endfor %}
 
@@ -122,6 +136,13 @@ public_release:
 	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
 	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
 
+
+
+# Rule to generate the Markdown file
+$(OUTPUT): $(TEMPLATE) $(YAML_FILE)
+	@echo "Generating Markdown file from template..."
+	jinjanate $(TEMPLATE) $(YAML_FILE) -o $(OUTPUT)
+	@echo "Generated $(OUTPUT)"
 
 .PHONY: install
 

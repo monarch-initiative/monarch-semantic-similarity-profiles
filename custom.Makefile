@@ -1,26 +1,59 @@
 SPARQLDIR				:=	scripts/sparql
 
-$(ONTOLOGYDIR)/upheno1-equivalent.owl: $(MIRRORDIR)/upheno1-equivalent.owl
+$(ONTOLOGYDIR)/upheno1.owl: $(MIRRORDIR)/upheno1.owl
 	$(ROBOT) merge -i $< -o $@
 
-$(ONTOLOGYDIR)/upheno2-equivalent.owl: $(MIRRORDIR)/upheno2-lattice.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
+.PRECIOUS: $(ONTOLOGYDIR)/upheno1.owl
+
+$(ONTOLOGYDIR)/phenio.owl:
+	wget https://github.com/monarch-initiative/phenio/releases/download/v2024-08-09/phenio.owl -O $@
+
+.PRECIOUS: $(ONTOLOGYDIR)/phenio.owl
+
+$(ONTOLOGYDIR)/phenio-flat.owl: $(MIRRORDIR)/phenio.owl
+	$(ROBOT) merge -i $< \
+		remove --term UPHENO:0001001 --select "self descendants" --axioms SubClassOf -o $@
+
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-flat.owl
+
+$(ONTOLOGYDIR)/phenio-lattice.owl: $(MIRRORDIR)/phenio.owl
+	cp $< $@
+
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-lattice.owl
+
+$(ONTOLOGYDIR)/phenio-equivalent.owl: $(MIRRORDIR)/phenio.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
 	$(ROBOT) query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
-	merge -i $< -o $@
+	merge -i $<  \
+	remove --axioms disjoint \
+	reason \
+	reduce -o $@
 
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-equivalent.owl
 
-$(TMP_DATA)/upheno_custom_mapping.sssom.tsv: $(TMP_DATA)/upheno_species_lexical.csv $(TMP_DATA)/upheno_mapping_logical.csv #is created using phenio-toolkit
-	phenio-toolkit lexical-mapping \
-	--species-lexical $< \
-	--mapping-logical $(TMP_DATA)/upheno_mapping_logical.csv \
-	--output $(TMP_DATA)
+$(TMP_DATA)/upheno-species-independent.sssom.tsv:
+	wget https://data.monarchinitiative.org/mappings/latest/upheno-species-independent.sssom.tsv -O $@
+
+$(TMP_DATA)/upheno-custom.sssom.tsv:
+	wget https://data.monarchinitiative.org/mappings/latest/upheno_custom.sssom.tsv -O $@
+
+$(TMP_DATA)/upheno-equivalence-mappings.sssom.tsv: $(TMP_DATA)/upheno-species-independent.sssom.tsv $(TMP_DATA)/upheno-custom.sssom.tsv
+	sssom merge $^ -o $@
+
 
 $(TMP_DATA)/upheno_custom_mapping.sssom.parsed.tsv: $(TMP_DATA)/upheno_custom_mapping.sssom.tsv
 	sssom parse $< \
 	-m $(TMP_DATA)/upheno_custom_mapping.sssom.metadata.yaml \
 	-o $@
 
-$(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl: $(TMP_DATA)/upheno_custom_mapping.sssom.parsed.tsv
-	sssom convert $< -o $@ > /dev/null
+.PHONY: rebuild-upheno-variants
+rebuild-upheno-variants: $(ONTOLOGYDIR)/phenio-equivalent.owl $(ONTOLOGYDIR)/phenio-lattice.owl $(ONTOLOGYDIR)/upheno1.owl $(ONTOLOGYDIR)/phenio-flat.owl
+
+# This is only for testing purposes
+# TODO: Figure out most comprehensive / correct equivalence mapping for uPheno
+UPHENO_EQUIVALENCE_MAPPING := $(TMP_DATA)/upheno-equivalence-mappings.sssom.tsv
+
+$(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl: $(UPHENO_EQUIVALENCE_MAPPING)
+	sssom convert $< -O owl -o $@ > /dev/null
 
 
 $(ONTOLOGYDIR)/%-without-abstract.owl: $(MIRRORDIR)/%.owl
@@ -89,26 +122,26 @@ $(TMP_DATA)/gene_phenotype.%.tsv: $(TMP_DATA)/gene_phenotype.%.tsv.gz
 
 #HP
 $(TMP_DATA)/phenio_monarch_hp_ic.tsv: $(TMP_DATA)/gene_phenotype.9606.tsv $(ONTOLOGYDIR)/phenio-monarch.db
-	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^HP: -o $@
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^HP: -p i i^UPHENO: -o $@
 
 #MP
 $(TMP_DATA)/phenio_monarch_mp_ic.tsv: $(TMP_DATA)/gene_phenotype.10090.tsv $(ONTOLOGYDIR)/phenio-monarch.db
-	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^MP: -o $@
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^MP: -p i i^UPHENO: -o $@
 
 $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv: $(TMP_DATA)/phenio_monarch_hp_ic.tsv $(TMP_DATA)/phenio_monarch_mp_ic.tsv
-	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_mp_ic.tsv > $@
+	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_mp_ic.tsv | uniq > $@
 
 
 #ZP
 $(TMP_DATA)/phenio_monarch_zp_ic.tsv: $(TMP_DATA)/gene_phenotype.7955.tsv $(ONTOLOGYDIR)/phenio-monarch.db
-	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^ZP: -o $@
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^ZP: -p i i^UPHENO: -o $@
 
 $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv: $(TMP_DATA)/phenio_monarch_hp_ic.tsv $(TMP_DATA)/phenio_monarch_zp_ic.tsv
-	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_zp_ic.tsv > $@
+	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_zp_ic.tsv | uniq > $@
 
 #XPO
 $(TMP_DATA)/phenio_monarch_xpo_ic.tsv: $(TMP_DATA)/gene_phenotype.8364.tsv $(ONTOLOGYDIR)/phenio-monarch.db
-	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^XPO: -o $@
+	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^XPO: -p i i^UPHENO: -o $@
 
 $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv: $(TMP_DATA)/phenio_monarch_hp_ic.tsv $(TMP_DATA)/phenio_monarch_xpo_ic.tsv
-	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_xpo_ic.tsv > $@
+	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_xpo_ic.tsv | uniq > $@
