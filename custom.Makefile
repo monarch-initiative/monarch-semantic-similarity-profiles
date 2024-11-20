@@ -12,7 +12,7 @@ $(ONTOLOGYDIR)/phenio.owl:
 
 $(ONTOLOGYDIR)/phenio-flat.owl: $(MIRRORDIR)/phenio.owl
 	$(ROBOT) merge -i $< \
-		remove --term UPHENO:0001001 --select "self descendants" --axioms SubClassOf -o $@
+		remove --term UPHENO:0001001 --select "self descendants" --axioms logical -o $@
 
 .PRECIOUS: $(ONTOLOGYDIR)/phenio-flat.owl
 
