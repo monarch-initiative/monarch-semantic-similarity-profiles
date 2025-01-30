@@ -20,7 +20,7 @@ $(ONTOLOGYDIR)/%.owl: $(MIRRORDIR)/%.owl
 	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
 	cp $< $@
 
-$(ONTOLOGYDIR)/%.db: $(ONTOLOGYDIR)/%.owl
+%.db: %.owl
 	@rm -f $*.db
 	@rm -f .template.db
 	@rm -f .template.db.tmp
