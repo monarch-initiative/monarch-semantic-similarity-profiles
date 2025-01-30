@@ -76,8 +76,8 @@ $(ONTOLOGYDIR)/phenio-equivalent.owl: $(MIRRORDIR)/phenio-release.owl $(ONTOLOGY
 PHENIO_MONARCH_DB = https://data.monarchinitiative.org/monarch-kg/latest/phenio.db.gz
 
 $(TMP_DATA)/phenio-monarch.db.gz:
-	if [ $(MIR) = true ]; then test -d $(TMP_DATA) || mkdir -p $(TMP_DATA)
-	wget $(PHENIO_MONARCH_DB) -O $@;fi
+	test -d $(TMP_DATA) || mkdir -p $(TMP_DATA)
+	if [ $(MIR) = true ]; then wget $(PHENIO_MONARCH_DB) -O $@;fi
 .PRECIOUS: $(TMP_DATA)/phenio-monarch.db.gz
 
 $(ONTOLOGYDIR)/phenio-monarch.db: $(TMP_DATA)/phenio-monarch.db.gz
