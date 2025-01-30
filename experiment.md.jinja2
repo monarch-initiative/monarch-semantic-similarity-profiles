@@ -4,30 +4,35 @@
 ## Ontologies used
 
 {% for ontology in ontologies %}
-- **Ontology ID**: `{{ ontology.id }}`{% if 'mirror_from' in ontology %}
-  - **Mirror From**: [{{ ontology.mirror_from }}]({{ ontology.mirror_from }}){% endif %}
-  {% if 'parent_term' in ontology %}
-  - **Parent Term**: `{{ ontology.parent_term }}`
-  {% endif %}
+### {{ ontology.id | upper }}
+
+- **ID**: `{{ ontology.id }}`{% if 'mirror_from' in ontology %}
+- **Mirror From**: [{{ ontology.mirror_from }}]({{ ontology.mirror_from }}){% endif %}
+{% if 'parent_term' in ontology %}
+- **Root term**: `{{ ontology.parent_term }}`
+{% endif %}
 {% endfor %}
 
 ## Semantic Similarity Profiles
 
 {% for profile in semantic_similarity_profiles %}
+
+### {{ profile.subset | upper }} ({{ profile.ontology }}), {{ profile.method }}, with similarity threshold {{ profile.threshold }}
+
 - **Subset**: `{{ profile.subset }}`
-  - **Method**: `{{ profile.method }}`
-  - **Ontology**: `{{ profile.ontology }}`
-  - **Threshold**: `{{ profile.threshold }}`{% if 'branches' in profile %}
-  - **Branches**:
-    - **Subject**: `{{ profile.branches.subject }}`
-    - **Object**: `{{ profile.branches.object }}`{% endif %}
-  {% if profile.prefixes %}
-  - **Prefixes**:
-    - **Subject**: `{{ profile.prefixes.subject }}`
-    - **Object**: `{{ profile.prefixes.object }}`
-  {% endif %}
-  {% if 'ic' in profile %}
-  - **IC**: `{{ profile.ic }}`
-  {% endif %}
+- **Method**: `{{ profile.method }}`
+- **Ontology**: `{{ profile.ontology }}`
+- **Threshold**: `{{ profile.threshold }}`{% if 'branches' in profile %}
+- **Branches**:
+  - **Subject**: `{{ profile.branches.subject }}`
+  - **Object**: `{{ profile.branches.object }}`{% endif %}
+{% if profile.prefixes %}
+- **Prefixes**:
+  - **Subject**: `{{ profile.prefixes.subject }}`
+  - **Object**: `{{ profile.prefixes.object }}`
+{% endif %}
+{% if 'ic' in profile %}
+- **IC**: `{{ profile.ic }}`
+{% endif %}
 {% endfor %}
 
