@@ -1,12 +1,6 @@
 directories:
   profiles: profiles
 
-mappings:
-  - id: hp
-  - id: mp
-  - id: zp
-  - id: xpo
-  - id: fbcv
 ontologies:
   - id: phenio-flat
   - id: phenio-release
