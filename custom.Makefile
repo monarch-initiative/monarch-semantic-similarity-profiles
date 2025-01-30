@@ -46,7 +46,7 @@ $(TMP_DATA)/upheno-species-independent.sssom.tsv:
 	wget https://data.monarchinitiative.org/mappings/latest/upheno-species-independent.sssom.tsv -O $@
 
 $(TMP_DATA)/upheno-custom.sssom.tsv:
-	wget https://data.monarchinitiative.org/mappings/latest/upheno_custom.sssom.tsv -O $@
+	wget https://data.monarchinitiative.org/mappings/latest/upheno-cross-species.sssom.tsv -O $@
 
 $(TMP_DATA)/upheno-equivalence-mappings.sssom.tsv: $(TMP_DATA)/upheno-species-independent.sssom.tsv $(TMP_DATA)/upheno-custom.sssom.tsv
 	sssom merge $^ -o $@
