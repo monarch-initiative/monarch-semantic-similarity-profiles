@@ -25,7 +25,7 @@ $(ONTOLOGYDIR)/phenio-release.owl: $(MIRRORDIR)/phenio-release.owl
 # The version of PHENIO stored used by Monarch Apps
 
 $(ONTOLOGYDIR)/phenio-monarch.owl:
-	@echo "$@" is not needed, we download the db file directly"
+	@echo "$@ is not needed, we download the db file directly"
 	touch $@
 .PRECIOUS: $(ONTOLOGYDIR)/phenio-monarch.owl
 

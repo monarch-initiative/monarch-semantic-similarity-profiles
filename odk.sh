@@ -10,4 +10,4 @@
 #
 # See README-editors.md for more details.
 docker pull obolibrary/odkfull:dev
-docker run -e ROBOT_JAVA_ARGS='-Xmx32G' -e JAVA_OPTS='-Xmx32G'  -v $PWD/:/work -w /work --rm -ti obolibrary/odkfull:dev "$@"
+docker run -e ROBOT_JAVA_ARGS='-Xmx40G' -e JAVA_OPTS='-Xmx40G'  -v $PWD/:/work -w /work --rm -ti obolibrary/odkfull:dev "$@"
