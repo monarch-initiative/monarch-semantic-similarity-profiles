@@ -14,8 +14,6 @@ $(MIRRORDIR)/%.owl: mirror-%
 		cp $(TMP_DATA)/mirror-$*.owl $@; fi; fi
 .PRECIOUS: $(MIRRORDIR)/%.owl
 
-.PHONY: generate-ontologies
-
 $(ONTOLOGYDIR)/%.owl: $(MIRRORDIR)/%.owl
 	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
 	cp $< $@
@@ -36,6 +34,8 @@ $(ONTOLOGYDIR)/%.owl: $(MIRRORDIR)/%.owl
 ###############################################################
 ## General rules for generating semantic similarity profiles ##
 ###############################################################
+
+.PHONY: generate-ontologies
 
 {%- for ontology in ontologies %}
 generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.owl $(ONTOLOGYDIR)/{{ ontology.id }}.db

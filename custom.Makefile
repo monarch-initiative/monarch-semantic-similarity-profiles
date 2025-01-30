@@ -5,6 +5,8 @@ SPARQLDIR				:=	scripts/sparql
 ### PREPARE ONTOLOGIES ##########
 #################################
 
+######## UPHENO1 RELEASE VERSION #######
+
 $(ONTOLOGYDIR)/upheno1.owl: $(MIRRORDIR)/upheno1.owl
 	$(ROBOT) merge -i $< reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
 .PRECIOUS: $(ONTOLOGYDIR)/upheno1.owl
@@ -78,7 +80,7 @@ $(TMP_DATA)/phenio-monarch.db.gz:
 	wget $(PHENIO_MONARCH_DB) -O $@
 
 $(ONTOLOGYDIR)/phenio-monarch.db: $(TMP_DATA)/phenio-monarch.db.gz
-	gunzip $<
+	gunzip $< -f
 
 #################################
 ### PREPARE ANNOTATION DATA #####
