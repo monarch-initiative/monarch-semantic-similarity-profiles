@@ -189,7 +189,7 @@ semantic_similarity_profiles:
   - subset: hp-xpo
     method: semsimian
     ontology: phenio-monarch
-    threshold: 0.4
+    threshold: 0.7
     prefixes:
       subject: hp
       object: xpo

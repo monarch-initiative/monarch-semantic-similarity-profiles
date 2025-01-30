@@ -448,16 +448,16 @@ profiles/phenio-monarch-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.d
 
 
 
-run-semsim: profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-xpo.0.7.semsimian.tsv
 
 
 
-profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
+profiles/phenio-monarch-hp-xpo.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/xpo_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
 
