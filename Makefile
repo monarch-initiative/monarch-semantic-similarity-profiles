@@ -140,78 +140,6 @@ profiles/%.gz: profiles/%.tsv
 
 
 
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-release-hp-mp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-release-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-release.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-release-hp-hp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-release-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-release.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-release-hp-zp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-release-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-release.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
 run-semsim: profiles/phenio-release-hp-mp.0.7.semsimian.tsv
 
 
@@ -256,166 +184,6 @@ profiles/phenio-release-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-release.d
 
 
 
-run-semsim: profiles/phenio-release-hp-zp.0.7.semsimian.tsv
-
-
-
-profiles/phenio-release-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-release.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.7 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-release-hp-fbcv.0.4.semsimian.tsv
-
-
-
-profiles/phenio-release-hp-fbcv.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-release.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/fbcv_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/upheno1-hp-mp.0.4.semsimian.tsv
-
-
-
-profiles/upheno1-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/upheno1-hp-hp.0.4.semsimian.tsv
-
-
-
-profiles/upheno1-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/upheno1-hp-zp.0.4.semsimian.tsv
-
-
-
-profiles/upheno1-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/upheno1-hp-mp.0.7.semsimian.tsv
-
-
-
-profiles/upheno1-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.7 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/upheno1-hp-hp.0.7.semsimian.tsv
-
-
-
-profiles/upheno1-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.7 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
 run-semsim: profiles/upheno1-hp-zp.0.7.semsimian.tsv
 
 
@@ -438,82 +206,16 @@ profiles/upheno1-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/
 
 
 
-run-semsim: profiles/upheno1-hp-fbcv.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-hp.0.7.semsimian.tsv
 
 
 
-profiles/upheno1-hp-fbcv.0.4.semsimian.tsv: $(ONTOLOGYDIR)/upheno1.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/fbcv_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+profiles/phenio-monarch-hp-hp.0.7.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-monarch-hp-fbcv.0.4.semsimian.tsv
-
-
-
-profiles/phenio-monarch-hp-fbcv.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/fbcv_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-monarch-hp-hp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-monarch-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_ic.tsv \
 	-O csv \
 	-o $@
@@ -526,16 +228,16 @@ profiles/phenio-monarch-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarc
 
 
 
-run-semsim: profiles/phenio-monarch-hp-mp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-mp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-monarch-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
+profiles/phenio-monarch-hp-mp.0.7.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv \
 	-O csv \
 	-o $@
@@ -548,16 +250,16 @@ profiles/phenio-monarch-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarc
 
 
 
-run-semsim: profiles/phenio-monarch-hp-zp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-zp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-monarch-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
+profiles/phenio-monarch-hp-zp.0.7.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv \
 	-O csv \
 	-o $@
@@ -680,19 +382,19 @@ profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.
 
 
 
-run-semsim: profiles/phenio-flat-hp-hp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-hp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-flat-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
+profiles/phenio-monarch-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_ic.tsv \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
+
 
 
 
@@ -702,19 +404,19 @@ profiles/phenio-flat-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $
 
 
 
-run-semsim: profiles/phenio-flat-hp-mp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-mp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-flat-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
+profiles/phenio-monarch-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
+
 
 
 
@@ -724,60 +426,16 @@ profiles/phenio-flat-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $
 
 
 
-run-semsim: profiles/phenio-flat-hp-zp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-zp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-flat-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
+profiles/phenio-monarch-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv \
-	-O csv \
-	-o $@
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv
-
-
-
-profiles/phenio-flat-hp-xpo.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/xpo_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv \
-	-O csv \
-	-o $@
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-flat-hp-hp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-flat-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
 
@@ -790,55 +448,11 @@ profiles/phenio-flat-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TM
 
 
 
-run-semsim: profiles/phenio-flat-hp-mp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv
 
 
 
-profiles/phenio-flat-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-flat-hp-zp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-flat-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv
-
-
-
-profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
+profiles/phenio-monarch-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
@@ -856,19 +470,41 @@ profiles/phenio-flat-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(T
 
 
 
-run-semsim: profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-monarch-hp-fbcv.0.4.semsimian.tsv
 
 
 
-profiles/phenio-equivalent-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/phenio_monarch_hp_ic.tsv
+profiles/phenio-monarch-hp-fbcv.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-monarch.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/fbcv_terms.txt
+	test -d profiles || mkdir -p profiles
+	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
+	--set1-file $(TMP_DATA)/hp_terms.txt \
+	--set2-file $(TMP_DATA)/fbcv_terms.txt \
+ 	--min-jaccard-similarity 0.4 \
+	-O csv \
+	-o $@
+
+
+
+
+
+
+  # endif method
+
+
+
+run-semsim: profiles/phenio-flat-hp-hp.0.7.semsimian.tsv
+
+
+
+profiles/phenio-flat-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_ic.tsv \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
+
 
 
 
@@ -878,19 +514,19 @@ profiles/phenio-equivalent-hp-hp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equ
 
 
 
-run-semsim: profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-flat-hp-mp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-equivalent-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
+profiles/phenio-flat-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
+
 
 
 
@@ -900,19 +536,19 @@ profiles/phenio-equivalent-hp-mp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equ
 
 
 
-run-semsim: profiles/phenio-equivalent-hp-zp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-flat-hp-zp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-equivalent-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
+profiles/phenio-flat-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-flat.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
+
 
 
 
@@ -922,38 +558,16 @@ profiles/phenio-equivalent-hp-zp.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equ
 
 
 
-run-semsim: profiles/phenio-equivalent-hp-xpo.0.4.semsimian.tsv
+run-semsim: profiles/phenio-equivalent-hp-hp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-equivalent-hp-xpo.0.4.semsimian.ic.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/xpo_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	--information-content-file  $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv \
-	-O csv \
-	-o $@
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv
-
-
-
-profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
+profiles/phenio-equivalent-hp-hp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/hp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/hp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
 
@@ -966,16 +580,16 @@ profiles/phenio-equivalent-hp-hp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equiva
 
 
 
-run-semsim: profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-equivalent-hp-mp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
+profiles/phenio-equivalent-hp-mp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/mp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/mp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
 
@@ -988,38 +602,16 @@ profiles/phenio-equivalent-hp-mp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equiva
 
 
 
-run-semsim: profiles/phenio-equivalent-hp-zp.0.4.semsimian.tsv
+run-semsim: profiles/phenio-equivalent-hp-zp.0.7.semsimian.tsv
 
 
 
-profiles/phenio-equivalent-hp-zp.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
+profiles/phenio-equivalent-hp-zp.0.7.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/zp_terms.txt
 	test -d profiles || mkdir -p profiles
 	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/hp_terms.txt \
 	--set2-file $(TMP_DATA)/zp_terms.txt \
- 	--min-jaccard-similarity 0.4 \
-	-O csv \
-	-o $@
-
-
-
-
-
-
-  # endif method
-
-
-
-run-semsim: profiles/phenio-equivalent-hp-xpo.0.4.semsimian.tsv
-
-
-
-profiles/phenio-equivalent-hp-xpo.0.4.semsimian.tsv: $(ONTOLOGYDIR)/phenio-equivalent.db $(TMP_DATA)/hp_terms.txt $(TMP_DATA)/xpo_terms.txt
-	test -d profiles || mkdir -p profiles
-	runoak --stacktrace -vvv  -i semsimian:sqlite:$< similarity -p i \
-	--set1-file $(TMP_DATA)/hp_terms.txt \
-	--set2-file $(TMP_DATA)/xpo_terms.txt \
- 	--min-jaccard-similarity 0.4 \
+ 	--min-jaccard-similarity 0.7 \
 	-O csv \
 	-o $@
 
