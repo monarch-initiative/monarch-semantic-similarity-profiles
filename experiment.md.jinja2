@@ -1,22 +1,12 @@
-{% raw %}
-# Ontology Configuration
-
-## Directories
-
+# Monarch Semantic Similarity Profiles
 - **Profiles Directory**: `{{ directories.profiles }}`
 
-## Mappings
-
-{% for mapping in mappings %}
-- **Mapping ID**: `{{ mapping.id }}`
-{% endfor %}
-
-## Ontologies
+## Ontologies used
 
 {% for ontology in ontologies %}
-- **Ontology ID**: `{{ ontology.id }}`
-  - **Mirror From**: [{{ ontology.mirror_from }}]({{ ontology.mirror_from }})
-  {% if ontology.parent_term %}
+- **Ontology ID**: `{{ ontology.id }}`{% if 'mirror_from' in ontology %}
+  - **Mirror From**: [{{ ontology.mirror_from }}]({{ ontology.mirror_from }}){% endif %}
+  {% if 'parent_term' in ontology %}
   - **Parent Term**: `{{ ontology.parent_term }}`
   {% endif %}
 {% endfor %}
@@ -27,17 +17,17 @@
 - **Subset**: `{{ profile.subset }}`
   - **Method**: `{{ profile.method }}`
   - **Ontology**: `{{ profile.ontology }}`
-  - **Threshold**: `{{ profile.threshold }}`
+  - **Threshold**: `{{ profile.threshold }}`{% if 'branches' in profile %}
   - **Branches**:
     - **Subject**: `{{ profile.branches.subject }}`
-    - **Object**: `{{ profile.branches.object }}`
+    - **Object**: `{{ profile.branches.object }}`{% endif %}
   {% if profile.prefixes %}
   - **Prefixes**:
     - **Subject**: `{{ profile.prefixes.subject }}`
     - **Object**: `{{ profile.prefixes.object }}`
   {% endif %}
-  {% if profile.ic %}
+  {% if 'ic' in profile %}
   - **IC**: `{{ profile.ic }}`
   {% endif %}
 {% endfor %}
-{% endraw %}
+

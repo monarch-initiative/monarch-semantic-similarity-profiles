@@ -1,6 +1,5 @@
 SPARQLDIR				:=	scripts/sparql
 
-
 #################################
 ### PREPARE ONTOLOGIES ##########
 #################################
@@ -8,7 +7,8 @@ SPARQLDIR				:=	scripts/sparql
 ######## UPHENO1 RELEASE VERSION #######
 
 $(ONTOLOGYDIR)/upheno1.owl: $(MIRRORDIR)/upheno1.owl
-	$(ROBOT) merge -i $< reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
+	$(ROBOT) remove -i $< --axioms "disjoint" \
+		reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
 .PRECIOUS: $(ONTOLOGYDIR)/upheno1.owl
 
 ######## PHENIO RELEASE VERSION #######
@@ -76,11 +76,13 @@ $(ONTOLOGYDIR)/phenio-equivalent.owl: $(MIRRORDIR)/phenio-release.owl $(ONTOLOGY
 PHENIO_MONARCH_DB = https://data.monarchinitiative.org/monarch-kg/latest/phenio.db.gz
 
 $(TMP_DATA)/phenio-monarch.db.gz:
-	test -d $(TMP_DATA) || mkdir -p $(TMP_DATA)
-	wget $(PHENIO_MONARCH_DB) -O $@
+	if [ $(MIR) = true ]; then test -d $(TMP_DATA) || mkdir -p $(TMP_DATA)
+	wget $(PHENIO_MONARCH_DB) -O $@;fi
+.PRECIOUS: $(TMP_DATA)/phenio-monarch.db.gz
 
 $(ONTOLOGYDIR)/phenio-monarch.db: $(TMP_DATA)/phenio-monarch.db.gz
-	gunzip $< -f
+	if [ $(MIR) = true ]; then gunzip $< -f; fi
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-monarch.db
 
 #################################
 ### PREPARE ANNOTATION DATA #####
