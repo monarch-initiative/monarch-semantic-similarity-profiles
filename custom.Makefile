@@ -77,7 +77,7 @@ $(TMP_DATA)/phenio-monarch.db.gz:
 	test -d $(TMP_DATA) || mkdir -p $(TMP_DATA)
 	wget $(PHENIO_MONARCH_DB) -O $@
 
-$(ONTOLOGYDIR)/phenio-monarch.db: $(ONTOLOGYDIR)/phenio-monarch.db.gz
+$(ONTOLOGYDIR)/phenio-monarch.db: $(TMP_DATA)/phenio-monarch.db.gz
 	gunzip $<
 
 #################################
