@@ -1,34 +1,46 @@
 SPARQLDIR				:=	scripts/sparql
 
-$(ONTOLOGYDIR)/upheno1.owl: $(MIRRORDIR)/upheno1.owl
-	$(ROBOT) merge -i $< -o $@
 
+#################################
+### PREPARE ONTOLOGIES ##########
+#################################
+
+$(ONTOLOGYDIR)/upheno1.owl: $(MIRRORDIR)/upheno1.owl
+	$(ROBOT) merge -i $< reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
 .PRECIOUS: $(ONTOLOGYDIR)/upheno1.owl
 
-$(ONTOLOGYDIR)/phenio.owl:
-	wget https://github.com/monarch-initiative/phenio/releases/download/v2024-08-09/phenio.owl -O $@
+######## PHENIO RELEASE VERSION #######
 
-.PRECIOUS: $(ONTOLOGYDIR)/phenio.owl
+# Created a custom goal for this as the OWL file is too large to be stored in the repo
+mirror-phenio-release:
+	mkdir -p $(TMP_DATA)
+	if [ $(MIR) = true ]; then curl -L https://github.com/monarch-initiative/phenio/releases/latest/download/phenio.owl.gz --create-dirs -o $(ONTOLOGYDIR)/phenio-release-download.owl.gz  --max-time 600 &&\
+		$(ROBOT) merge -i $(ONTOLOGYDIR)/phenio-release-download.owl.gz convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
 
-$(ONTOLOGYDIR)/phenio-flat.owl: $(MIRRORDIR)/phenio.owl
+$(ONTOLOGYDIR)/phenio-release.owl: $(MIRRORDIR)/phenio-release.owl
+	cp $< $@
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-release.owl
+
+######## PHENIO MONARCH VERSION #######
+# The version of PHENIO stored used by Monarch Apps
+
+$(ONTOLOGYDIR)/phenio-monarch.owl:
+	@echo "$@" is not needed, we download the db file directly"
+	touch $@
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-monarch.owl
+
+######## PHENIO FLAT VERSION #######
+# A version without subclass axioms
+
+$(ONTOLOGYDIR)/phenio-flat.owl: $(MIRRORDIR)/phenio-release.owl
 	$(ROBOT) merge -i $< \
 		remove --term UPHENO:0001001 --select "self descendants" --axioms logical -o $@
-
 .PRECIOUS: $(ONTOLOGYDIR)/phenio-flat.owl
 
-$(ONTOLOGYDIR)/phenio-lattice.owl: $(MIRRORDIR)/phenio.owl
-	cp $< $@
+######## PHENIO EQUIVALENT #######
+## Needs a bit of fuzzzzing around
 
-.PRECIOUS: $(ONTOLOGYDIR)/phenio-lattice.owl
-
-$(ONTOLOGYDIR)/phenio-equivalent.owl: $(MIRRORDIR)/phenio.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
-	$(ROBOT) query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
-	merge -i $<  \
-	remove --axioms disjoint \
-	reason \
-	reduce -o $@
-
-.PRECIOUS: $(ONTOLOGYDIR)/phenio-equivalent.owl
+# TODO: Figure out most comprehensive / correct equivalence mapping for uPheno
 
 $(TMP_DATA)/upheno-species-independent.sssom.tsv:
 	wget https://data.monarchinitiative.org/mappings/latest/upheno-species-independent.sssom.tsv -O $@
@@ -39,60 +51,38 @@ $(TMP_DATA)/upheno-custom.sssom.tsv:
 $(TMP_DATA)/upheno-equivalence-mappings.sssom.tsv: $(TMP_DATA)/upheno-species-independent.sssom.tsv $(TMP_DATA)/upheno-custom.sssom.tsv
 	sssom merge $^ -o $@
 
-
-$(TMP_DATA)/upheno_custom_mapping.sssom.parsed.tsv: $(TMP_DATA)/upheno_custom_mapping.sssom.tsv
-	sssom parse $< \
-	-m $(TMP_DATA)/upheno_custom_mapping.sssom.metadata.yaml \
-	-o $@
-
-.PHONY: rebuild-upheno-variants
-rebuild-upheno-variants: $(ONTOLOGYDIR)/phenio-equivalent.owl $(ONTOLOGYDIR)/phenio-lattice.owl $(ONTOLOGYDIR)/upheno1.owl $(ONTOLOGYDIR)/phenio-flat.owl
-
-# This is only for testing purposes
-# TODO: Figure out most comprehensive / correct equivalence mapping for uPheno
-UPHENO_EQUIVALENCE_MAPPING := $(TMP_DATA)/upheno-equivalence-mappings.sssom.tsv
-
-$(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl: $(UPHENO_EQUIVALENCE_MAPPING)
+$(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl: $(TMP_DATA)/upheno-equivalence-mappings.sssom.tsv
 	sssom convert $< -O owl -o $@ > /dev/null
 
-
-$(ONTOLOGYDIR)/%-without-abstract.owl: $(MIRRORDIR)/%.owl
-	$(ROBOT) merge -i $< \
-	remove --select "BFO:*" --select classes \
-	remove --select "PATO:*" --select classes \
-	-o $@
-
-$(ONTOLOGYDIR)/%.db: $(ONTOLOGYDIR)/%.owl
-	semsql make $@
+$(ONTOLOGYDIR)/phenio-equivalent.owl: $(MIRRORDIR)/phenio-release.owl $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl
+	$(ROBOT) query -i $(ONTOLOGYDIR)/upheno-mappings-equivalent-class.owl --update $(SPARQLDIR)/prepare-upheno-mapping.ru \
+	merge -i $<  \
+	remove --axioms disjoint \
+	reason \
+	reduce -o $@
+.PRECIOUS: $(ONTOLOGYDIR)/phenio-equivalent.owl
 
 
-$(TMP_DATA)/%.db:  $(TMP_DATA)/%.owl
-	@rm -f .template.db
-	@rm -f .template.db.tmp
-	@rm -f $(TMP_DATA)/$*-relation-graph.tsv.gz
-	semsql make $@
-	@rm -f .template.db
-	@rm -f .template.db.tmp
-	@rm -f $(TMP_DATA)/$*-relation-graph.tsv.gz
+# TODO DELETE THIS:
+#$(TMP_DATA)/upheno_custom_mapping.sssom.parsed.tsv: $(TMP_DATA)/upheno_custom_mapping.sssom.tsv
+#	sssom parse $< \
+#	-m $(TMP_DATA)/upheno_custom_mapping.sssom.metadata.yaml \
+#	-o $@
+
+######## PHENIO MONARCH VERSION #######
 
 PHENIO_MONARCH_DB = https://data.monarchinitiative.org/monarch-kg/latest/phenio.db.gz
 
-$(ONTOLOGYDIR)/phenio-monarch.db.gz:
-	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
+$(TMP_DATA)/phenio-monarch.db.gz:
+	test -d $(TMP_DATA) || mkdir -p $(TMP_DATA)
 	wget $(PHENIO_MONARCH_DB) -O $@
 
 $(ONTOLOGYDIR)/phenio-monarch.db: $(ONTOLOGYDIR)/phenio-monarch.db.gz
 	gunzip $<
 
-PHENIO_URL = https://github.com/monarch-initiative/phenio/releases/download/2023-07-11/phenio.owl
-$(TMP_DATA)/phenio.owl:
-	mkdir -p $(TMP_DATA)
-	wget $(PHENIO_URL) -O $@
-
-
-$(TMP_DATA)/phenio-plus.owl: $(TMP_DATA)/phenio.owl $(TMP_DATA)/hpoa_d2p_preprocessed.ttl $(TMP_DATA)/hpoa_g2p_preprocessed.ttl
-	$(ROBOT) merge $(foreach n,$^, -i $(n)) -o $@
-#Here are the ones for the HPOA file:
+#################################
+### PREPARE ANNOTATION DATA #####
+#################################
 
 HPOA_D2P_MONARCH=https://data.monarchinitiative.org/monarch-kg-dev/latest/rdf/hpoa_disease_to_phenotype.nt.gz
 HPOA_G2P_MONARCH=https://data.monarchinitiative.org/monarch-kg-dev/latest/rdf/hpoa_gene_to_phenotype.nt.gz
@@ -120,28 +110,44 @@ $(TMP_DATA)/gene_phenotype.%.tsv.gz:
 $(TMP_DATA)/gene_phenotype.%.tsv: $(TMP_DATA)/gene_phenotype.%.tsv.gz
 	gunzip -f $<
 
-#HP
+#################################
+### PREPARE IC SCORES ###########
+#################################
+
 $(TMP_DATA)/phenio_monarch_hp_ic.tsv: $(TMP_DATA)/gene_phenotype.9606.tsv $(ONTOLOGYDIR)/phenio-monarch.db
 	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^HP: -p i i^UPHENO: -o $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_hp_ic.tsv
 
-#MP
 $(TMP_DATA)/phenio_monarch_mp_ic.tsv: $(TMP_DATA)/gene_phenotype.10090.tsv $(ONTOLOGYDIR)/phenio-monarch.db
 	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^MP: -p i i^UPHENO: -o $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_mp_ic.tsv
 
 $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv: $(TMP_DATA)/phenio_monarch_hp_ic.tsv $(TMP_DATA)/phenio_monarch_mp_ic.tsv
 	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_mp_ic.tsv | uniq > $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_hp_mp_ic.tsv
 
-
-#ZP
 $(TMP_DATA)/phenio_monarch_zp_ic.tsv: $(TMP_DATA)/gene_phenotype.7955.tsv $(ONTOLOGYDIR)/phenio-monarch.db
 	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^ZP: -p i i^UPHENO: -o $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_zp_ic.tsv
 
 $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv: $(TMP_DATA)/phenio_monarch_hp_ic.tsv $(TMP_DATA)/phenio_monarch_zp_ic.tsv
 	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_zp_ic.tsv | uniq > $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_hp_zp_ic.tsv
 
-#XPO
 $(TMP_DATA)/phenio_monarch_xpo_ic.tsv: $(TMP_DATA)/gene_phenotype.8364.tsv $(ONTOLOGYDIR)/phenio-monarch.db
 	runoak -i $(ONTOLOGYDIR)/phenio-monarch.db -g $< -G hpoa_g2p information-content -p i i^XPO: -p i i^UPHENO: -o $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_xpo_ic.tsv
 
 $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv: $(TMP_DATA)/phenio_monarch_hp_ic.tsv $(TMP_DATA)/phenio_monarch_xpo_ic.tsv
 	awk 'FNR==1 && NR!=1{next} {print}' $< $(TMP_DATA)/phenio_monarch_xpo_ic.tsv | uniq > $@
+.PRECIOUS: $(TMP_DATA)/phenio_monarch_hp_xpo_ic.tsv
+
+#########################
+### MISC GOALS ##########
+#########################
+
+.PHONY: public_release
+public_release:
+	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
+	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
+	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
