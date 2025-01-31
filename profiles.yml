@@ -39,7 +39,7 @@ semantic_similarity_profiles:
   - subset: hp-mp
     method: semsimian
     ontology: phenio-release
-    threshold: 0.7
+    threshold: 0.4
     branches:
       subject: UPHENO:0001001
       object: UPHENO:0001001
@@ -49,7 +49,7 @@ semantic_similarity_profiles:
   - subset: hp-hp
     method: semsimian
     ontology: phenio-release
-    threshold: 0.7
+    threshold: 0.4
     branches:
       subject: UPHENO:0001001
       object: UPHENO:0001001
@@ -59,7 +59,7 @@ semantic_similarity_profiles:
   - subset: hp-zp
     method: semsimian
     ontology: phenio-release
-    threshold: 0.7
+    threshold: 0.4
     branches:
       subject: UPHENO:0001001
       object: UPHENO:0001001
@@ -73,7 +73,7 @@ semantic_similarity_profiles:
   #- subset: all
   #  method: semsimian
   #  ontology: upheno1
-  #  threshold: 0.7
+  #  threshold: 0.4
   #  branches:
   #    subject: UPHENO:0001001
   #    object: UPHENO:0001001
@@ -89,7 +89,7 @@ semantic_similarity_profiles:
 
     method: semsimian
     ontology: upheno1
-    threshold: 0.7
+    threshold: 0.4
     branches:
       subject: UPHENO:0001001
       object: UPHENO:0001001
@@ -103,7 +103,7 @@ semantic_similarity_profiles:
     method: semsimian
     ontology: phenio-monarch
     ic: phenio_monarch_hp_ic.tsv
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: hp
@@ -111,7 +111,7 @@ semantic_similarity_profiles:
     method: semsimian
     ontology: phenio-monarch
     ic: phenio_monarch_hp_mp_ic.tsv
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: mp
@@ -119,7 +119,7 @@ semantic_similarity_profiles:
     method: semsimian
     ontology: phenio-monarch
     ic: phenio_monarch_hp_zp_ic.tsv
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: zp
@@ -190,7 +190,7 @@ semantic_similarity_profiles:
   - subset: hp-fbcv
     method: semsimian
     ontology: phenio-monarch
-    threshold: 0.4
+    threshold: 0.7
     prefixes:
       subject: hp
       object: fbcv
@@ -210,21 +210,21 @@ semantic_similarity_profiles:
   - subset: hp-hp
     method: semsimian
     ontology: phenio-flat
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: hp
   - subset: hp-mp
     method: semsimian
     ontology: phenio-flat
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: mp
   - subset: hp-zp
     method: semsimian
     ontology: phenio-flat
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: zp
@@ -235,21 +235,21 @@ semantic_similarity_profiles:
   - subset: hp-hp
     method: semsimian
     ontology: phenio-equivalent
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: hp
   - subset: hp-mp
     method: semsimian
     ontology: phenio-equivalent
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: mp
   - subset: hp-zp
     method: semsimian
     ontology: phenio-equivalent
-    threshold: 0.7
+    threshold: 0.4
     prefixes:
       subject: hp
       object: zp
