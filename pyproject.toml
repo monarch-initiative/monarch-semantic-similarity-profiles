@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "monarch-semantic-similarity-profiles"
+version = "0.1.0"
+description = "Monarch Semantic Similarity Profiles"
+readme = "README.md"
+authors = [
+  { name = "Nico Matentzoglu", email = "nicolas.matentzoglu@gmail.com" },
+  { name = "Vinícius de Souza", email = "souzadevinicius@gmail.com" },
+]
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1.8",
+    "polars>=1.22.0",
+    "tqdm>=4.67.1",
+]
+
+[project.scripts]
+monarch_semsim = "monarch_semsim.cli.cli:cli"
