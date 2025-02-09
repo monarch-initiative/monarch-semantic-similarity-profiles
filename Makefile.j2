@@ -9,53 +9,73 @@ MIR						:=	true
 ROBOT					:=  robot
 
 $(MIRRORDIR)/%.owl: mirror-%
+	test -d $(MIRRORDIR) || mkdir -p $(MIRRORDIR)
 	if [ $(MIR) = true ] && [ -f $(TMP_DATA)/mirror-$*.owl ]; then mkdir -p $(MIRRORDIR) && if cmp -s $(TMP_DATA)/mirror-$*.owl $@ ; then echo "Mirror identical, ignoring."; else echo "Mirrors different, updating." &&\
 		cp $(TMP_DATA)/mirror-$*.owl $@; fi; fi
 .PRECIOUS: $(MIRRORDIR)/%.owl
-
-.PHONY: generate-ontologies
 
 $(ONTOLOGYDIR)/%.owl: $(MIRRORDIR)/%.owl
 	test -d $(ONTOLOGYDIR) || mkdir -p $(ONTOLOGYDIR)
 	cp $< $@
 
-{%- for ontology in ontologies %}
-generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
+%.db: %.owl
+	@rm -f $*.db
+	@rm -f .template.db
+	@rm -f .template.db.tmp
+	@rm -f $*-relation-graph.tsv.gz
+	RUST_BACKTRACE=full semsql make $*.db -P config/prefixes.csv
+	@rm -f .template.db
+	@rm -f .template.db.tmp
+	@rm -f $*-relation-graph.tsv.gz
+	@test -f $*.db || (echo "Error: File not found!" && exit 1)
 
+.PRECIOUS: %.db
+
+###############################################################
+## General rules for generating semantic similarity profiles ##
+###############################################################
+
+.PHONY: generate-ontologies
+
+{%- for ontology in ontologies %}
+generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.owl $(ONTOLOGYDIR)/{{ ontology.id }}.db
+
+{% if 'mirror_from' in ontology -%}
 mirror-{{ ontology.id }}:
 	mkdir -p $(TMP_DATA)
-	if [ $(MIR) = true ]; then curl -L {{ ontology.mirror_from }} --create-dirs -o $(ONTOLOGYDIR)/{{ ontology.id }}-download.owl  --max-time 600 &&\
-		$(ROBOT) merge -i $(ONTOLOGYDIR)/{{ ontology.id }}-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+	if [ $(MIR) = true ]; then curl -L {{ ontology.mirror_from }} --create-dirs -o $(TMP_DATA)/{{ ontology.id }}-download.owl  --max-time 600 &&\
+		$(ROBOT) merge -i $(TMP_DATA)/{{ ontology.id }}-download.owl convert -o $@.tmp.owl && mv $@.tmp.owl $(TMP_DATA)/$@.owl; fi
+{% endif %}
 
 {% if 'parent_term' in ontology -%}
 
-
-$(TMP_DATA)/{{ ontology.id }}_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
+$(TMP_DATA)/{{ ontology.id }}_terms.txt: $(ONTOLOGYDIR)/{{ ontology.id }}.db
 	runoak -i sqlite:$< descendants -p i {{ ontology.parent_term }} -o $@
 
-{% endif %}
-
-generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}.db
-
-$(ONTOLOGYDIR)/{{ ontology.id }}.db: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
-	semsql make $@
+{% endif -%}
+{% endfor -%}
 
 
-#4
-generate-ontologies: $(ONTOLOGYDIR)/{{ ontology.id }}_flat.owl
-
-#4
-# Maybe it's better to just create an empty semsim table rather than doing this unecessary computation
-$(ONTOLOGYDIR)/{{ ontology.id }}_flat.owl: $(ONTOLOGYDIR)/{{ ontology.id }}.owl
-	$(ROBOT) remove --axioms "logical" --input $< --output $@
-
-{% endfor %}
-
-.PHONY: run-semsim
+###############################################################
+## General rules for generating semantic similarity profiles ##
+###############################################################
 
 run-semsim: generate-ontologies
+.PHONY: run-semsim
+
+{{ directories.profiles }}/%.gz: {{ directories.profiles }}/%.tsv
+	gzip -c $< > $@.tmp && mv $@.tmp $@
 
 {% for semsim in semantic_similarity_profiles %}
+
+{% if 'custom' in semsim.method -%}
+
+{{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv:
+	echo "$@ has to be manually configured"
+	false
+
+{% else -%}
+
 {% if 'prefixes' in semsim -%}
 
 run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv
@@ -65,17 +85,19 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 {% if 'ic' in semsim -%}
 
 
+
 {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.ic.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt $(TMP_DATA)/{{ semsim.ic }}
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
 	runoak --stacktrace -vvv  -i {{ semsim.method }}:sqlite:$< similarity -p i \
 	--set1-file $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt \
 	--set2-file $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt \
- 	--min-jaccard-similarity {{semsim.threshold}} \
+ 	--min-jaccard-similarity {{ semsim.threshold }} \
 	--information-content-file  $(TMP_DATA)/{{ semsim.ic }} \
 	-O csv \
 	-o $@
 
-{% else %}
+{% else -%}
+
 
 {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}.{{semsim.threshold}}.{{ semsim.method }}.tsv: $(ONTOLOGYDIR)/{{ semsim.ontology }}.db $(TMP_DATA)/{{ semsim.prefixes.subject }}_terms.txt $(TMP_DATA)/{{ semsim.prefixes.object }}_terms.txt
 	test -d {{ directories.profiles }} || mkdir -p {{ directories.profiles }}
@@ -91,41 +113,13 @@ run-semsim: {{ directories.profiles }}/{{ semsim.ontology }}-{{ semsim.subset }}
 
 {% endif %}
 
+{% endif %}  # endif method
+
 {% endfor %}
 
-{{ directories.profiles }}/%.gz: {{ directories.profiles }}/%.tsv
-	gzip -c $< > $@.tmp && mv $@.tmp $@
-
-.PHONY: generate-mappings
-{%- for mapping in mappings %}
-generate-mappings: $(TMP_DATA)/{{ mapping.id }}-lexmatch.sssom.tsv
-{% endfor %}
-
-### 2.2
-$(TMP_DATA)/%-lexmatch.sssom.tsv: $(ONTOLOGYDIR)/%.owl
-	runoak -i $< lexmatch -o $@
-
-
-# Obtain lexmatch results then combine to upheno2
-
-### 3
-
-upheno1-equivalent-inferred.owl: $(ONTOLOGYDIR)/upheno1-equivalent.owl
-	$(ROBOT) merge -i $< reason --reasoner ELK --axiom-generators "EquivalentClass" -o $@
-
-generate-ontologies: upheno1-equivalent-inferred.owl
-
-
-.PHONY: public_release
-public_release:
-	gsutil rsync -d profiles/ gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d)
-	gsutil -m rm -r gs://data-public-monarchinitiative/semantic-similarity/latest/*
-	gsutil cp -r gs://data-public-monarchinitiative/semantic-similarity/$(shell date +%Y-%m-%d) gs://data-public-monarchinitiative/semantic-similarity/latest
-
-
-.PHONY: install
-
-install:
+.PHONY: upgrade
+upgrade:
+	echo "Upgrading dependencies, only use this if absolutely necessary"
 	pip install oaklib -U
 	pip install semsimian -U
 
